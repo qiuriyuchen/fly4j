@@ -181,5 +181,7 @@
         <module>fly4j-cache</module>
         <module>fly4j-sfile</module>
         <module>fly4j-http</module>
+        <module>fly4j-crypto</module>
+        <module>fly4j-common</module>
     </modules>
 </project>
