@@ -1,6 +1,5 @@
 package fly4j.common;
 
-import fly.common.LogUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -17,7 +16,7 @@ public interface EatExcetionRunable extends Runnable {
         try {
             this.runNoExcetion();
         } catch (Exception e) {
-            LogUtil.error(LogUtil.FILE_EXCEPTION, "run Exception", e);
+//            LogUtil.error(LogUtil.FILE_EXCEPTION, "run Exception", e);
         }
     }
 
