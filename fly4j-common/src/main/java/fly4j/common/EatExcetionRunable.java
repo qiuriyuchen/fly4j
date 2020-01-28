@@ -9,14 +9,14 @@ import org.apache.commons.logging.LogFactory;
  */
 @FunctionalInterface
 public interface EatExcetionRunable extends Runnable {
-    static final Log log = LogFactory.getLog(EatExcetionRunable.class);
+    Log log = LogFactory.getLog(EatExcetionRunable.class);
 
     @Override
     default void run() {
         try {
             this.runNoExcetion();
         } catch (Exception e) {
-//            LogUtil.error(LogUtil.FILE_EXCEPTION, "run Exception", e);
+            log.error("run Exception", e);
         }
     }
 
