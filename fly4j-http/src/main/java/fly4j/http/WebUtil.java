@@ -35,10 +35,22 @@ public class WebUtil {
 
     }
 
+    public static String getParameterStr(HttpServletRequest request, String paramName, String defaultValue) {
+        return request.getParameter(paramName) != null ? request.getParameter(paramName) : defaultValue;
 
+    }
+    public static boolean equalsParameter(HttpServletRequest request, String paramName, String compValue) {
+        return (request.getParameter(paramName) != null)
+                && (request.getParameter(paramName).equals(compValue));
 
+    }
 
-    public String getIp(HttpServletRequest request) {
+    public static int getParameterInt(HttpServletRequest request, String paramName, int defaultValue) {
+        return request.getParameter(paramName) != null ? Integer.parseInt(request.getParameter(paramName)) : defaultValue;
+
+    }
+
+    public static String getIp(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
         if (StringUtils.isBlank(ip)) {
             ip = request.getRemoteAddr();
@@ -46,7 +58,7 @@ public class WebUtil {
         return ip;
     }
 
-    public boolean isFromPhone(HttpServletRequest req) {
+    public static boolean isFromPhone(HttpServletRequest req) {
         String userAgent = req.getHeader("user-agent").toLowerCase();
         if (userAgent.contains("iphone"))
             return true;
@@ -55,13 +67,12 @@ public class WebUtil {
         return false;
     }
 
-    public boolean isFromPc(HttpServletRequest req) {
+    public static boolean isFromPc(HttpServletRequest req) {
         return !isFromPhone(req);
     }
 
 
-
-    public void sendRedirect(HttpServletResponse resp, String returnUrl) {
+    public static void sendRedirect(HttpServletResponse resp, String returnUrl) {
         try {
             resp.sendRedirect(URLDecoder.decode(returnUrl, "utf-8"));
         } catch (IOException e) {
