@@ -39,6 +39,12 @@ public class WebUtil {
         return request.getParameter(paramName) != null ? request.getParameter(paramName) : defaultValue;
 
     }
+
+    public static String getParameterStr(HttpServletRequest request, String paramName) {
+        return request.getParameter(paramName);
+
+    }
+
     public static boolean equalsParameter(HttpServletRequest request, String paramName, String compValue) {
         return (request.getParameter(paramName) != null)
                 && (request.getParameter(paramName).equals(compValue));
