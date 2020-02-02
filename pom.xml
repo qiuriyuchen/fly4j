@@ -183,5 +183,6 @@
         <module>fly4j-http</module>
         <module>fly4j-crypto</module>
         <module>fly4j-common</module>
+        <module>fly4j-frame</module>
     </modules>
 </project>
