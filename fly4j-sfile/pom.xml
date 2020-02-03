@@ -12,12 +12,5 @@
     <artifactId>fly4j-sfile</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.6</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 </project>
