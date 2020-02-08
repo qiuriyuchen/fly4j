@@ -1,4 +1,4 @@
-package fly4j.common;
+package fly4j.common.test;
 
 
 import fly4j.common.file.FileUtil;

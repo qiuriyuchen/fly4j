@@ -1,5 +1,6 @@
-package fly4j.common;
+package fly4j.common.test;
 
+import fly4j.common.DateUtil;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
