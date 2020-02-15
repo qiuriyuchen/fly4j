@@ -14,13 +14,13 @@ public class ReflectUtil {
         }
     }
 
-    private Object getFieldValueByFieldName(String fieldName, Object object) {
+    public static Object getFieldValueByFieldName(String fieldName, Object object) {
         try {
-            Field field = object.getClass().getField(fieldName);
+            Field field = object.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
             return field.get(object);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("" + object.getClass(), e);
         }
     }
 
