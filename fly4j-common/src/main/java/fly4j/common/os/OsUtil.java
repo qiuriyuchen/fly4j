@@ -16,10 +16,23 @@ public class OsUtil {
     public static boolean isLinuxReal() {
         return System.getProperty("os.name").toLowerCase().startsWith("linux");
     }
+
     public static boolean isMac() {
         return System.getProperty("os.name").toLowerCase().startsWith("mac");
     }
 
+    public static String getSimpleOsName() {
+        if (isWindows()) {
+            return "window";
+        } else if (isMac()) {
+            return "mac";
+        } else if (isLinuxReal()) {
+            return "linux";
+        } else {
+            return "linuxLike";
+        }
+
+    }
 
     public static void main(String[] args) {
         System.out.println(System.getProperty("os.name"));

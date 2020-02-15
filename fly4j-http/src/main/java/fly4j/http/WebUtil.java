@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLDecoder;
 
 /**
@@ -86,5 +88,55 @@ public class WebUtil {
         }
     }
 
+    public static String getDomain(HttpServletRequest req) {
+        String urlStr = req.getRequestURL().toString();
+        URL url = null;
+        try {
+            url = new URL(urlStr);
+            String host = url.getHost();
+            return host;
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return "";
 
+    }
+
+    public static String getDomainUrl(HttpServletRequest req) {
+        return getProtocol(req) + "://" + getDomain(req) + ":" + WebUtil.getPortStr(req) + "/";
+
+    }
+
+    public static String getProtocol(HttpServletRequest req) {
+        String urlStr = req.getRequestURL().toString();
+        URL url = null;
+        try {
+            url = new URL(urlStr);
+            String host = url.getProtocol();
+            return host;
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return "";
+
+    }
+
+    public static String getPortStr(HttpServletRequest req) {
+        String urlStr = req.getRequestURL().toString();
+        URL url = null;
+        try {
+            url = new URL(urlStr);
+            if (url.getPort() == 80) {
+                return "";
+            }
+            return "" + url.getPort();
+        } catch (MalformedURLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return "";
+
+    }
 }

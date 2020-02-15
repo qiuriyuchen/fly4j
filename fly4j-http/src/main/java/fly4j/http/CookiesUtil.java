@@ -72,7 +72,8 @@ final public class CookiesUtil {
      * @param request
      * @param response
      */
-    public static void clearCookie(HttpServletRequest request, HttpServletResponse response, String cookieName, String domain) {
+    public static void clearCookie(HttpServletRequest request, HttpServletResponse response, String cookieName) {
+        String domain=WebUtil.getDomain(request);
         if (org.apache.commons.lang.StringUtils.isEmpty(cookieName)) {
             return;
         }
@@ -123,7 +124,8 @@ final public class CookiesUtil {
     }
 
 
-    public static void addHttpOnlyCookie(HttpServletResponse response, String cookieName, String cookieValue, int cookieMaxAge, String domain) {
+    public static void addHttpOnlyCookie(HttpServletRequest request,HttpServletResponse response, String cookieName, String cookieValue, int cookieMaxAge) {
+        String domain=WebUtil.getDomain(request);
         // 单点登录跨域用的 获取持久化cookie
         response.setHeader("P3P",
                 "CP=\"CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR\"");
@@ -192,11 +194,11 @@ final public class CookiesUtil {
         }
     }
 
-    public static void addHttpOnlyCookieEncode(HttpServletResponse response, String cookieName, String cookieValue, int cookieMaxAge, String domain) {
+    public static void addHttpOnlyCookieEncode(HttpServletRequest request,HttpServletResponse response, String cookieName, String cookieValue, int cookieMaxAge) {
         try {
             if (null != cookieValue)
                 cookieValue = URLEncoder.encode(cookieValue, "utf-8");
-            addHttpOnlyCookie(response, cookieName, cookieValue, cookieMaxAge, domain);
+            addHttpOnlyCookie(request,response, cookieName, cookieValue, cookieMaxAge);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -204,8 +206,9 @@ final public class CookiesUtil {
     }
 
 
-    public static void addNotHttpOnlyCookie(HttpServletResponse response, String cookieName, String cookieValue,
-                                            int cookieMaxAge, String domain) {
+    public static void addNotHttpOnlyCookie(HttpServletRequest request,HttpServletResponse response, String cookieName, String cookieValue,
+                                            int cookieMaxAge) {
+        String domain=WebUtil.getDomain(request);
         Cookie newCookie = new Cookie(cookieName, cookieValue);
         newCookie.setMaxAge(cookieMaxAge);
         newCookie.setDomain(domain);
