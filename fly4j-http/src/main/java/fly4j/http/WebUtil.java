@@ -104,8 +104,14 @@ public class WebUtil {
     }
 
     public static String getDomainUrl(HttpServletRequest req) {
-        return getProtocol(req) + "://" + getDomain(req) + ":" + WebUtil.getPortStr(req) + "/";
-
+        StringBuilder domainUrl = new StringBuilder();
+        domainUrl.append(getProtocol(req)).append("://").append(getDomain(req));
+        int port = getPort(req);
+        if (port >= 80) {
+            domainUrl.append(":").append(port);
+        }
+        domainUrl.append("/");
+        return domainUrl.toString();
     }
 
     public static String getProtocol(HttpServletRequest req) {
@@ -123,20 +129,17 @@ public class WebUtil {
 
     }
 
-    public static String getPortStr(HttpServletRequest req) {
+    public static Integer getPort(HttpServletRequest req) {
         String urlStr = req.getRequestURL().toString();
         URL url = null;
         try {
             url = new URL(urlStr);
-            if (url.getPort() == 80) {
-                return "";
-            }
-            return "" + url.getPort();
+            return url.getPort();
         } catch (MalformedURLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return "";
+        return 0;
 
     }
 }
