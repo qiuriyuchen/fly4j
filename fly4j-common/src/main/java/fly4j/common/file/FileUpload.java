@@ -15,7 +15,7 @@ import java.util.List;
 public class FileUpload {
 
 
-    public static String uploadFile(HttpServletRequest request, String currPath, long sizeMax) throws Exception {
+    public static String uploadFile(HttpServletRequest request, String currPath, long sizeMaxM) throws Exception {
         //如果不是文件上传，则返回
         boolean isMultipart = ServletFileUpload.isMultipartContent(request);
         if (!isMultipart) {
@@ -34,12 +34,12 @@ public class FileUpload {
         // 设置临时目录：
         String tempPath = request.getSession().getServletContext().getRealPath("/temp");
         factory.setRepository(new File(tempPath));
-        // 设置缓冲区大小，这里是4kb
+        // 设置缓冲区大小，这里是40M
         factory.setSizeThreshold(41943040);
 
         ServletFileUpload upload = new ServletFileUpload(factory);
         // 设置最大文件4MB
-        upload.setSizeMax(sizeMax);
+        upload.setSizeMax(sizeMaxM * 1024 * 1024);
         // 得到所有的文件：
         List<FileItem> fileList = upload.parseRequest(request);
 
