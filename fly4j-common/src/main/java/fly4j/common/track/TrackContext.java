@@ -23,6 +23,8 @@ public class TrackContext {
     }
 
     public static void appendTrackInfo(String iknowInfoAppend) {
+        if (null == threadLocal.get())
+            reset();
         threadLocal.get().trackInfoStrBuilder.append(iknowInfoAppend).append(SPLIT);
         System.out.println(iknowInfoAppend);
     }
