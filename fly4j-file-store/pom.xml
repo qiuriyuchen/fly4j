@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>fly4j-sfile</artifactId>
+    <artifactId>fly4j-file-store</artifactId>
 
     <dependencies>
     </dependencies>

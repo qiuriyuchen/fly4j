@@ -177,7 +177,8 @@
     </build>
     <modules>
         <module>fly4j-cache</module>
-        <module>fly4j-sfile</module>
+        <module>fly4j-file-store</module>
+        <module>fly4j-file-back</module>
         <module>fly4j-http</module>
         <module>fly4j-crypto</module>
         <module>fly4j-common</module>
