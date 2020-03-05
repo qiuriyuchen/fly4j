@@ -9,6 +9,7 @@ import fly4j.common.track.TrackContext;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -192,7 +193,7 @@ public class DirCompareImpl implements DirCompare {
     }
 
     public  List<File> getSortMd5Files(String checkDir) {
-        List<File> md5Files = Arrays.asList(FileUtil.listFilesWithEndStr(checkDir, ".md5"));
+        List<File> md5Files = Arrays.asList(FileUtil.listFilesWithEndStr(FilenameUtils.concat(checkDir,".flyMd5"), ".md5"));
         Collections.sort(md5Files, (f1, f2) -> {
             long t1 = Long.valueOf(f1.getName().replaceAll("md5", "").replaceAll("\\.", ""));
             long t2 = Long.valueOf(f2.getName().replaceAll("md5", "").replaceAll("\\.", ""));
