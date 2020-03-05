@@ -33,7 +33,9 @@ public class ZipConfig {
     public String getBackDirName() {
         return FilenameUtils.getBaseName(FilenameUtils.getPathNoEndSeparator(this.getBeZipSourceDir()));
     }
-
+    public String getMd5DirName() {
+        return FilenameUtils.concat(getBeZipSourceDir(), ".md5") + File.separator;
+    }
     /**
      * eg  /export/back/mecode/
      */

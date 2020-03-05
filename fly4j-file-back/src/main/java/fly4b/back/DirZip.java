@@ -52,7 +52,7 @@ public class DirZip {
         getZipConfigList().forEach(zipConfig -> {
             try {
                 Map<String, String> md5Map = dirCompare.getDirMd5Map(zipConfig.getBeZipSourceDir());
-                String md5FilePath = zipConfig.getBeZipSourceDir() + "/md5" + System.currentTimeMillis() + ".md5";
+                String md5FilePath = getMd5FilePath(zipConfig);
                 FileUtils.writeStringToFile(new File(md5FilePath), JsonUtils.writeValueAsString(md5Map), Charset.forName("utf-8"));
                 dirCompare.deleteMoreMd5Files(zipConfig.getBeZipSourceDir());
 
@@ -125,6 +125,14 @@ public class DirZip {
 
         StringConst.appendLine(builder, "back end");
         return builder.toString();
+    }
+
+    private String getMd5FilePath(ZipConfig zipConfig) {
+        File dirFile=new File(zipConfig.getMd5DirName());
+        if(!dirFile.exists()){
+            dirFile.mkdir();
+        }
+        return zipConfig.getMd5DirName() + "/md5" + System.currentTimeMillis() + ".md5";
     }
 
 
