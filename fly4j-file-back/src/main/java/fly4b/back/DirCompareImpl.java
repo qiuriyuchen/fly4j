@@ -21,8 +21,9 @@ import java.util.*;
 public class DirCompareImpl implements DirCompare {
     public static String genType = "md5";
     private FileAndDirFilter noNeedCalMd5FileFilter;
+
     @Override
-    public DirCompareResult compar(List<String> compDirs) throws Exception {
+    public DirCompareResult compar(List<String> compDirs) {
         DirCompareResult result = new DirCompareResult();
         TrackContext.reset();
         int same = 0;
@@ -67,13 +68,13 @@ public class DirCompareImpl implements DirCompare {
         return result;
     }
 
-    public Map<String, String> getDirMd5Map(String checkDir) throws Exception {
+    public Map<String, String> getDirMd5Map(String checkDir) {
         Map<String, String> md5Map = new LinkedHashMap<>();
         getMd5FileStr(new File(checkDir), md5Map, checkDir);
         return md5Map;
     }
 
-    public void getMd5FileStr(File dirFile, Map<String, String> md5Map, String baseDir) throws Exception {
+    public void getMd5FileStr(File dirFile, Map<String, String> md5Map, String baseDir) {
         try {
             File[] files = dirFile.listFiles();
             for (File file : files) {
@@ -103,6 +104,7 @@ public class DirCompareImpl implements DirCompare {
         } catch (Exception e) {
             System.out.println("dirFile:" + dirFile);
             e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
     }
@@ -152,7 +154,7 @@ public class DirCompareImpl implements DirCompare {
     }
 
     @Override
-    public String check(String checkDir, int checkMd5Count) throws Exception {
+    public String check(String checkDir, int checkMd5Count) {
         final StringBuilder stringBuilder = new StringBuilder();
         StringConst.appendLine(stringBuilder, "check:" + checkDir);
         List<File> md5Files = getSortMd5Files(checkDir);
@@ -193,8 +195,8 @@ public class DirCompareImpl implements DirCompare {
         }
     }
 
-    public  List<File> getSortMd5Files(String checkDir) {
-        List<File> md5Files = Arrays.asList(FileUtil.listFilesWithEndStr(FilenameUtils.concat(checkDir,".flyMd5"), ".md5"));
+    public List<File> getSortMd5Files(String checkDir) {
+        List<File> md5Files = Arrays.asList(FileUtil.listFilesWithEndStr(FilenameUtils.concat(checkDir, ".flyMd5"), ".md5"));
         Collections.sort(md5Files, (f1, f2) -> {
             long t1 = Long.valueOf(f1.getName().replaceAll("md5", "").replaceAll("\\.", ""));
             long t2 = Long.valueOf(f2.getName().replaceAll("md5", "").replaceAll("\\.", ""));
@@ -203,6 +205,7 @@ public class DirCompareImpl implements DirCompare {
         });
         return md5Files;
     }
+
     @Override
     public void deleteMoreMd5Files(String beZipSourceDir) {
         //删除多余的Md5文件 deleteMore md5
