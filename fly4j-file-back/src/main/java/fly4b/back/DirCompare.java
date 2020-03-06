@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface DirCompare {
-    DirCompareResult compar(List<String> compDirs, boolean masterSlave) throws Exception;
+    DirCompareResult compar(List<String> compDirs) throws Exception;
 
     Map<String, String> getDirMd5Map(String checkDir) throws Exception;
 

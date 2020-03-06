@@ -22,11 +22,12 @@ public class DirCompareImpl implements DirCompare {
     public static String genType = "md5";
     private FileAndDirFilter noNeedCalMd5FileFilter;
     @Override
-    public DirCompareResult compar(List<String> compDirs, boolean masterSlave) throws Exception {
+    public DirCompareResult compar(List<String> compDirs) throws Exception {
         DirCompareResult result = new DirCompareResult();
         TrackContext.reset();
         int same = 0;
 
+        //得到文件夹的Md5Map
         Set<String> allKeys = new HashSet<>();
         List<Map<String, String>> allMap = new ArrayList<>();
         for (String compDir : compDirs) {
