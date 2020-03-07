@@ -1,5 +1,6 @@
 package fly4j.common.file;
 
+import fly4j.common.StringConst;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -260,7 +261,7 @@ public class FileUtil {
             servletOutputStream.flush();
 
         } catch (IOException e) {
-           throw new RuntimeException( "文件输出到客户端异常", e);
+            throw new RuntimeException("文件输出到客户端异常", e);
         } finally {
             if (null != inputStream) {
                 try {
@@ -304,5 +305,18 @@ public class FileUtil {
 //        System.out.println(convertK2M(1073741824));
 //        System.out.println(convertM2K(19));
 //        FileUtil.rename(new File("D:\\ssssss\\b.jpg"),"c");
+        testFilePath();
+
+
+    }
+
+    private static void testFilePath() {
+        //测试路径
+        StringBuilder msg = new StringBuilder();
+        msg.append("System.getProperty(\"user.dir\")").append(":").append(System.getProperty("user.dir")).append(StringConst.N_N);
+        msg.append(" System.getProperty(\"java.class.path\")").append(":").append(System.getProperty("java.class.path")).append(StringConst.N_N);
+        //不可以在jar包使用
+        msg.append("this.getClass().getResource(\"/\").getPath()").append(":").append(FileUtil.class.getResource("/").getPath()).append(StringConst.N_N);
+        System.out.println(msg);
     }
 }
