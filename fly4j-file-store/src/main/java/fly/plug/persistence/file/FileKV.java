@@ -18,15 +18,11 @@ import java.util.List;
  * ------/pin/article/
  * 如果pin和innerDir为空，则退化为全局数据Map
  * bseDir 数据文件
- * fileKv's floder
- * <p>
- * db1
- * key1[json1]
- * key2[json2]
- * db2
- * db..n
+ * key :作为文件名存储
+ * value：作为文件内容
  *
  * @author guanpanpan
+ * @date created:forget;created is before:2020/03/07
  */
 public class FileKV {
     private FileStrStore fileStrStore = new FileStrStore();
