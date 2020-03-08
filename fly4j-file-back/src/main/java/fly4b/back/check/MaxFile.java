@@ -13,10 +13,10 @@ import java.io.File;
 public class MaxFile {
 
 
-    public static String findMaxFileAndFloder(File dirFile, long alertFileSize, long alertFloderSize) throws Exception {
+    public static String findMaxFileAndFloder(File dirFile, long alertFileSize, long alertFloderSize) {
         StringBuilder builder = new StringBuilder();
         File[] files = dirFile.listFiles();
-        if(null==files){
+        if (null == files) {
             return builder.toString();
         }
         for (File file : files) {
