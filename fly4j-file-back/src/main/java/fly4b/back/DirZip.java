@@ -106,9 +106,9 @@ public class DirZip {
         });
         System.out.println("TargetFileDel end");
         //休息等临时文件消失
-        if(afterCopySleppTime>0){
+        if (afterCopySleppTime > 0) {
             try {
-                Thread.sleep(afterCopySleppTime);
+                Thread.sleep(afterCopySleppTime * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -120,7 +120,7 @@ public class DirZip {
                 Zip4jTool.zip(zipConfig.getDestZipFullPath(), zipConfig.getTargetBackDir(), zipConfig.getPassword());
             } catch (ZipException e) {
                 e.printStackTrace();
-                log.error( "Zip4jTool.zip destZip:" + zipConfig.getDestZipFullPath() + " srcFile:" + zipConfig.getBeZipSourceDir(), e);
+                log.error("Zip4jTool.zip destZip:" + zipConfig.getDestZipFullPath() + " srcFile:" + zipConfig.getBeZipSourceDir(), e);
                 builder.append(zipConfig.getDestZipFullPath()).append(" error ").append(e.getMessage()).append(StringConst.N_N);
             }
             builder.append(zipConfig.getDestZipFullPath()).append(" ziped").append(StringConst.N_N);
