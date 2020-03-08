@@ -3,10 +3,13 @@ package fly4b.back;
 import fly4b.back.zip.Zip4jTool;
 import fly4j.common.JsonUtils;
 import fly4j.common.StringConst;
+import fly4j.common.log.LogUtil;
 import fly4j.common.os.OsUtil;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -17,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class DirZip {
+    public static final Log log = LogFactory.getLog(DirZip.class);
     protected FileFilter noNeedBackFileFilter;
     protected List<ZipConfig> zipConfigs = new ArrayList<>();
     private DirCompare dirCompare;
@@ -109,7 +113,8 @@ public class DirZip {
             try {
                 Zip4jTool.zip(zipConfig.getDestZipFullPath(), zipConfig.getTargetBackDir(), zipConfig.getPassword());
             } catch (ZipException e) {
-//                LogUtil.error(FlyConsts.FILE_FLY, "Zip4jTool.zip destZip:" + destZipFileName + " srcFile:" + zipConfig.getBeZipSourceDir(), e);
+                e.printStackTrace();
+                log.error( "Zip4jTool.zip destZip:" + zipConfig.getDestZipFullPath() + " srcFile:" + zipConfig.getBeZipSourceDir(), e);
                 builder.append(zipConfig.getDestZipFullPath()).append(" error ").append(e.getMessage()).append(StringConst.N_N);
             }
             builder.append(zipConfig.getDestZipFullPath()).append(" ziped").append(StringConst.N_N);
