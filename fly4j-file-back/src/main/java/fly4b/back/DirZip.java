@@ -24,7 +24,7 @@ public class DirZip {
     protected FileFilter noNeedBackFileFilter;
     protected List<ZipConfig> zipConfigs = new ArrayList<>();
     private DirCompare dirCompare;
-
+    private long afterCopySleppTime = 0;
 
     public String executeCheck() throws Exception {
         StringBuilder builder = new StringBuilder();
@@ -106,12 +106,13 @@ public class DirZip {
         });
         System.out.println("TargetFileDel end");
         //休息等临时文件消失
-        try {
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if(afterCopySleppTime>0){
+            try {
+                Thread.sleep(afterCopySleppTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
-
         //执行备份 backFile
         for (ZipConfig zipConfig : getZipConfigList()) {
             DateFormat df = new SimpleDateFormat("yy-MM-dd_HH");
@@ -222,5 +223,7 @@ public class DirZip {
         return noNeedBackFileFilter;
     }
 
-
+    public void setAfterCopySleppTime(long afterCopySleppTime) {
+        this.afterCopySleppTime = afterCopySleppTime;
+    }
 }
