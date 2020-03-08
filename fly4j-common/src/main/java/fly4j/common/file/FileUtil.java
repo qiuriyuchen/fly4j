@@ -289,6 +289,9 @@ public class FileUtil {
         return false;
     }
 
+    /**
+     * ***************************下边测试部分演示容易出错部分用法***************************
+     */
     public static void main(String[] args) throws Exception {
 
 //        String path = "D:\\back\\a.zip";
@@ -305,7 +308,9 @@ public class FileUtil {
 //        System.out.println(convertK2M(1073741824));
 //        System.out.println(convertM2K(19));
 //        FileUtil.rename(new File("D:\\ssssss\\b.jpg"),"c");
-        testFilePath();
+//        testFilePath();
+
+        testFileName();
 
 
     }
@@ -318,5 +323,18 @@ public class FileUtil {
         //不可以在jar包使用
         msg.append("this.getClass().getResource(\"/\").getPath()").append(":").append(FileUtil.class.getResource("/").getPath()).append(StringConst.N_N);
         System.out.println(msg);
+    }
+
+    private static void testFileName() {
+        //fly\pin  warnig:会丢失 blogs,因为不知道结尾是文件，还是文件夹
+        System.out.println(FilenameUtils.getPathNoEndSeparator("D:\\fly\\pin\\blogs"));
+        //D:\fly\pin
+        System.out.println(FilenameUtils.getFullPathNoEndSeparator("D:\\fly\\pin\\blogs"));
+        //blogs
+        System.out.println(FilenameUtils.getBaseName("D:\\fly\\pin\\blogs"));
+        //空
+        System.out.println(FilenameUtils.getBaseName("D:\\fly\\pin\\blogs\\"));
+        //pin warnig:会丢失 blogs
+        System.out.println(FilenameUtils.getBaseName(FilenameUtils.getPathNoEndSeparator("D:\\fly\\pin\\blogs")));
     }
 }

@@ -33,12 +33,13 @@ public class ZipConfig {
         this.password = password;
     }
 
+
     /**
      * eg mecode
      */
     @JsonIgnore
     private String getBackDirName() {
-        return FilenameUtils.getBaseName(FilenameUtils.getPathNoEndSeparator(this.getBeZipSourceDir()));
+        return FilenameUtils.getBaseName(this.getBeZipSourceDir());
     }
 
     /**
