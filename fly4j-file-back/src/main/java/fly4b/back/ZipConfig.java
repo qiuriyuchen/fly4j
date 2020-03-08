@@ -1,8 +1,13 @@
 package fly4b.back;
 
+import fly4j.common.os.OsUtil;
 import org.apache.commons.io.FilenameUtils;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * eg: /export/mecode/* --> /export/back/**.zip
@@ -18,7 +23,6 @@ public class ZipConfig {
     private String zipToDirPath;
     private String password;
     private boolean delZip = true;
-    private String destZipFileName;
 
 
     public ZipConfig(String beZipSourceDir, String zipToDirPath, String password) {
@@ -30,18 +34,37 @@ public class ZipConfig {
     /**
      * eg mecode
      */
-    public String getBackDirName() {
+    @JsonIgnore
+    private String getBackDirName() {
         return FilenameUtils.getBaseName(FilenameUtils.getPathNoEndSeparator(this.getBeZipSourceDir()));
     }
+
+    /**
+     * 版本文件存放路径
+     */
+    @JsonIgnore
     public String getMd5DirName() {
         return FilenameUtils.concat(getBeZipSourceDir(), ".flyMd5") + File.separator;
     }
+
+
     /**
      * eg  /export/back/mecode/
      */
+    @JsonIgnore
     public String getTargetBackDir() {
         return FilenameUtils.concat(getZipToDirPath(), getBackDirName()) + File.separator;
     }
+
+    @JsonIgnore
+    public String getDestZipFullPath() {
+        DateFormat df = new SimpleDateFormat("yy-MM-dd_HH");
+        return this.getZipToDirPath() + OsUtil.getSimpleOsName() + df.format(new Date()) + this.getBackDirName() + ".zip";
+    }
+
+    /**
+     * ***********     seter and geter      ************
+     */
 
     public String getBeZipSourceDir() {
         return beZipSourceDir;
@@ -73,14 +96,6 @@ public class ZipConfig {
 
     public boolean isDelZip() {
         return delZip;
-    }
-
-    public void setDestZipFileName(String destZipFileName) {
-        this.destZipFileName = destZipFileName;
-    }
-
-    public String getDestZipFileName() {
-        return destZipFileName;
     }
 
 

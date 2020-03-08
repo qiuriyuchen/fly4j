@@ -106,15 +106,13 @@ public class DirZip {
         //执行备份 backFile
         for (ZipConfig zipConfig : getZipConfigList()) {
             DateFormat df = new SimpleDateFormat("yy-MM-dd_HH");
-            String destZipFileName = zipConfig.getZipToDirPath() + OsUtil.getSimpleOsName() + df.format(new Date()) + zipConfig.getBackDirName() + ".zip";
-            zipConfig.setDestZipFileName(destZipFileName);
             try {
-                Zip4jTool.zip(destZipFileName, zipConfig.getTargetBackDir(), zipConfig.getPassword());
+                Zip4jTool.zip(zipConfig.getDestZipFullPath(), zipConfig.getTargetBackDir(), zipConfig.getPassword());
             } catch (ZipException e) {
 //                LogUtil.error(FlyConsts.FILE_FLY, "Zip4jTool.zip destZip:" + destZipFileName + " srcFile:" + zipConfig.getBeZipSourceDir(), e);
-                builder.append(destZipFileName).append(" error ").append(e.getMessage()).append(StringConst.N_N);
+                builder.append(zipConfig.getDestZipFullPath()).append(" error ").append(e.getMessage()).append(StringConst.N_N);
             }
-            builder.append(destZipFileName).append(" ziped").append(StringConst.N_N);
+            builder.append(zipConfig.getDestZipFullPath()).append(" ziped").append(StringConst.N_N);
         }
 
         //
