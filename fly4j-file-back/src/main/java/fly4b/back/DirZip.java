@@ -126,8 +126,8 @@ public class DirZip {
     }
 
     private String getMd5FilePath(ZipConfig zipConfig) {
-        File dirFile=new File(zipConfig.getMd5DirName());
-        if(!dirFile.exists()){
+        File dirFile = new File(zipConfig.getMd5DirName());
+        if (!dirFile.exists()) {
             dirFile.mkdir();
         }
         return zipConfig.getMd5DirName() + "/md5" + System.currentTimeMillis() + ".md5";
@@ -200,12 +200,17 @@ public class DirZip {
         this.zipConfigs = zipConfigs;
     }
 
+    public void setZipConfigs(List<ZipConfig> zipConfigs) {
+        this.zipConfigs = zipConfigs;
+    }
 
     public void setNoNeedBackFileFilter(FileFilter noNeedBackFileFilter) {
         this.noNeedBackFileFilter = noNeedBackFileFilter;
     }
 
-    public void setZipConfigs(List<ZipConfig> zipConfigs) {
-        this.zipConfigs = zipConfigs;
+    public FileFilter getNoNeedBackFileFilter() {
+        return noNeedBackFileFilter;
     }
+
+
 }

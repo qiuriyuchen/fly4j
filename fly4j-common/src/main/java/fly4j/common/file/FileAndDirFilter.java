@@ -4,13 +4,14 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.util.HashSet;
 import java.util.Set;
 
 public class FileAndDirFilter implements FileFilter {
     //过滤的路径
-    private Set<String> filterDirNames;
+    private Set<String> filterDirNames = new HashSet<>();
     //过滤文件名
-    private Set<String> filterSuffixNames;
+    private Set<String> filterSuffixNames = new HashSet<>();
     private boolean includeFile = true;
     private boolean isIncludeDir = true;
 

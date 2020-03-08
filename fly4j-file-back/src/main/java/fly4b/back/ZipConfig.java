@@ -61,7 +61,8 @@ public class ZipConfig {
     @JsonIgnore
     public String getDestZipFullPath() {
         DateFormat df = new SimpleDateFormat("yy-MM-dd_HH");
-        return this.getZipToDirPath() + OsUtil.getSimpleOsName() + df.format(new Date()) + this.getBackDirName() + ".zip";
+        String fileName = OsUtil.getSimpleOsName() + df.format(new Date()) + this.getBackDirName() + ".zip";
+        return FilenameUtils.concat(this.getZipToDirPath(), fileName);
     }
 
     /**
