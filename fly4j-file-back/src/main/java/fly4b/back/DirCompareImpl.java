@@ -158,6 +158,13 @@ public class DirCompareImpl implements DirCompare {
         final StringBuilder stringBuilder = new StringBuilder();
         StringConst.appendLine(stringBuilder, "check:" + checkDir);
         List<File> md5Files = getSortMd5Files(checkDir);
+        if (null == md5Files) {
+            stringBuilder.append(" not have history file");
+            return stringBuilder.toString();
+        }
+        if (checkMd5Count > md5Files.size()) {
+            checkMd5Count = md5Files.size();
+        }
         for (int index = 0; index < checkMd5Count; index++) {
             File md5File = md5Files.get(index);
             try {
@@ -196,7 +203,11 @@ public class DirCompareImpl implements DirCompare {
     }
 
     public List<File> getSortMd5Files(String checkDir) {
-        List<File> md5Files = Arrays.asList(FileUtil.listFilesWithEndStr(FilenameUtils.concat(checkDir, ".flyMd5"), ".md5"));
+        File[] filesArray = FileUtil.listFilesWithEndStr(FilenameUtils.concat(checkDir, ".flyMd5"), ".md5");
+        if (null == filesArray) {
+            return null;
+        }
+        List<File> md5Files = Arrays.asList();
         Collections.sort(md5Files, (f1, f2) -> {
             long t1 = Long.valueOf(f1.getName().replaceAll("md5", "").replaceAll("\\.", ""));
             long t2 = Long.valueOf(f2.getName().replaceAll("md5", "").replaceAll("\\.", ""));
