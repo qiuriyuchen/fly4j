@@ -1,6 +1,7 @@
 package fly4b.back.check;
 
 import fly4j.common.StringConst;
+import fly4j.common.file.FileUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -23,10 +24,10 @@ public class MaxFile {
 
             if (file.isDirectory()) {
                 //查找大文件夹
-                long size = FileUtils.sizeOfDirectory(file);
-                if (size > alertFloderSize) {
-                    StringConst.appendLine(builder, "大文件夹：" + file.getAbsolutePath() + " " + FileUtils.byteCountToDisplaySize(size));
-                }
+//                long size = FileUtils.sizeOfDirectory(file);
+//                if (size > alertFloderSize) {
+//                    StringConst.appendLine(builder, "大文件夹：" + file.getAbsolutePath() + " " + FileUtils.byteCountToDisplaySize(size));
+//                }
                 //递归
                 String str = findMaxFileAndFloder(file, alertFileSize, alertFloderSize);
                 if (StringUtils.isNotBlank(str))
@@ -35,7 +36,7 @@ public class MaxFile {
                 //查找大文件
                 long size = file.length();
                 if (size > alertFileSize) {
-                    StringConst.appendLine(builder, file.getAbsolutePath() + " " + FileUtils.byteCountToDisplaySize(size) + " " + " max than " + alertFileSize);
+                    StringConst.appendLine(builder, file.getAbsolutePath() + " " + FileUtils.byteCountToDisplaySize(size) + " " + " max than " + FileUtils.byteCountToDisplaySize(alertFileSize));
                 }
             }
 
