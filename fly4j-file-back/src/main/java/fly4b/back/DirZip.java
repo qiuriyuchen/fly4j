@@ -105,7 +105,12 @@ public class DirZip {
             this.deleteNoNeedBackFloder(new File(zipConfig.getTargetBackDir()));
         });
         System.out.println("TargetFileDel end");
-
+        //休息等临时文件消失
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         //执行备份 backFile
         for (ZipConfig zipConfig : getZipConfigList()) {
