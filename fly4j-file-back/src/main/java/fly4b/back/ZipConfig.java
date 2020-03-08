@@ -24,6 +24,8 @@ public class ZipConfig {
     private String password;
     private boolean delZip = true;
 
+    public ZipConfig() {
+    }
 
     public ZipConfig(String beZipSourceDir, String zipToDirPath, String password) {
         this.beZipSourceDir = beZipSourceDir;

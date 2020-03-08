@@ -53,14 +53,7 @@ public class JsonUtils {
         }
         try {
             return (T)objectMapper.readValue(josnStr, cls);
-        } catch (JsonParseException e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
-        } catch (JsonMappingException e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
