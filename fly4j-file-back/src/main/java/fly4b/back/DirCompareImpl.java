@@ -207,7 +207,7 @@ public class DirCompareImpl implements DirCompare {
         if (null == filesArray) {
             return null;
         }
-        List<File> md5Files = Arrays.asList();
+        List<File> md5Files = Arrays.asList(filesArray);
         Collections.sort(md5Files, (f1, f2) -> {
             long t1 = Long.valueOf(f1.getName().replaceAll("md5", "").replaceAll("\\.", ""));
             long t2 = Long.valueOf(f2.getName().replaceAll("md5", "").replaceAll("\\.", ""));
