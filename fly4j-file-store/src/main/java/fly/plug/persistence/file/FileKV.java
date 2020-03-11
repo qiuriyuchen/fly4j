@@ -10,7 +10,7 @@ import java.util.List;
  * pin   可以理解为不同的数据库
  * secondDbSpace 细分数据,可以为空,比如存放文章和用户，分别为article和user，则对应数据目录分别为/export/data/article和/export/data/user
  * <p>
- * bseDir
+ * dataDir
  * ------/pin
  * ------/pin/article/
  * ------/pin/user/
@@ -44,15 +44,15 @@ public class FileKV {
     }
 
     /**
-     * @param
-     * @param id    主键，可以理解为Map的key
-     * @param value
-     * @return
+     * @param id 主键，可以理解为Map的key
      */
-    public Long setValue(String firstDbSpace, String id, String value) {
+    public void setValue(String firstDbSpace, String id, String value) {
         String storePath = getStoreFilePath(firstDbSpace, id);
         fileStrStore.setValue(storePath, value);
-        return null;
+    }
+
+    public void setValue(String id, String value) {
+        this.setValue("", id, value);
     }
 
     public List<String> getValues(String firstDbSpace, String keyPre) {
@@ -64,11 +64,18 @@ public class FileKV {
         return fileStrStore.getValue(filePath);
     }
 
+    public String getValue(String id) {
+        return getValue("", id);
+    }
+
     public void delete(String firstDbSpace, String id) {
         String filePath = getStoreFilePath(firstDbSpace, id);
         fileStrStore.delete(filePath);
     }
 
+    public void delete(String id) {
+        this.delete("", id);
+    }
 
     private String getStoreDirPath(String firstDbSpace) {
         if (StringUtils.isBlank(firstDbSpace)) {
