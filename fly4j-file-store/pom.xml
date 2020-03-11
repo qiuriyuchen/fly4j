@@ -12,5 +12,10 @@
     <artifactId>fly4j-file-store</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>qryc</groupId>
+            <artifactId>fly4j-common</artifactId>
+            <version>${fly.version}</version>
+        </dependency>
     </dependencies>
 </project>

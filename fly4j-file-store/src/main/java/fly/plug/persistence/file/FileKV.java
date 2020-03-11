@@ -1,5 +1,6 @@
 package fly.plug.persistence.file;
 
+import fly4j.common.JsonUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -55,6 +56,10 @@ public class FileKV {
         this.setValue("", id, value);
     }
 
+    public void setObject(String id, Object value) {
+        this.setValue(id, JsonUtils.writeValueAsString(value));
+    }
+
     public List<String> getValues(String firstDbSpace, String keyPre) {
         return fileStrStore.getValues(getStoreDirPath(firstDbSpace), keyPre);
     }
@@ -66,6 +71,11 @@ public class FileKV {
 
     public String getValue(String id) {
         return getValue("", id);
+    }
+
+    public <T> T getObject(String id, Class<T> cls) {
+        String json = this.getValue(id);
+        return JsonUtils.readValue(json, cls);
     }
 
     public void delete(String firstDbSpace, String id) {
