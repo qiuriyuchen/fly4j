@@ -23,6 +23,7 @@ public class ZipConfig {
     private String zipToDirPath;
     private String password;
     private boolean delZip = true;
+    private String lastDestZipFullPath;
 
     public ZipConfig() {
     }
@@ -60,10 +61,16 @@ public class ZipConfig {
     }
 
     @JsonIgnore
-    public String getDestZipFullPath() {
+    public String genDestZipFullPath() {
         DateFormat df = new SimpleDateFormat("yy-MM-dd_HH");
         String fileName = OsUtil.getSimpleOsName() + df.format(new Date()) + this.getBackDirName() + ".zip";
-        return FilenameUtils.concat(this.getZipToDirPath(), fileName);
+        this.lastDestZipFullPath = FilenameUtils.concat(this.getZipToDirPath(), fileName);
+        return this.lastDestZipFullPath;
+    }
+
+    @JsonIgnore
+    public String getLastDestZipFullPath() {
+        return lastDestZipFullPath;
     }
 
     /**

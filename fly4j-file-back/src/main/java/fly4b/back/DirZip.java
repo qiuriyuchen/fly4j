@@ -117,13 +117,13 @@ public class DirZip {
         for (ZipConfig zipConfig : getZipConfigList()) {
             DateFormat df = new SimpleDateFormat("yy-MM-dd_HH");
             try {
-                Zip4jTool.zip(zipConfig.getDestZipFullPath(), zipConfig.getTargetBackDir(), zipConfig.getPassword());
+                Zip4jTool.zip(zipConfig.genDestZipFullPath(), zipConfig.getTargetBackDir(), zipConfig.getPassword());
             } catch (ZipException e) {
                 e.printStackTrace();
-                log.error("Zip4jTool.zip destZip:" + zipConfig.getDestZipFullPath() + " srcFile:" + zipConfig.getBeZipSourceDir(), e);
-                builder.append(zipConfig.getDestZipFullPath()).append(" error ").append(e.getMessage()).append(StringConst.N_N);
+                log.error("Zip4jTool.zip destZip:" + zipConfig.getLastDestZipFullPath() + " srcFile:" + zipConfig.getBeZipSourceDir(), e);
+                builder.append(zipConfig.getLastDestZipFullPath()).append(" error ").append(e.getMessage()).append(StringConst.N_N);
             }
-            builder.append(zipConfig.getDestZipFullPath()).append(" ziped").append(StringConst.N_N);
+            builder.append(zipConfig.getLastDestZipFullPath()).append(" ziped").append(StringConst.N_N);
         }
 
         //
