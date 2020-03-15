@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by guan on 2020/3/15.
@@ -23,7 +24,7 @@ public class DirEncrypt {
     public Map<String, String> encrypt(String srcDirUrl, String targetDirUrl, int pass) {
         String baseDir = new File(srcDirUrl).getAbsolutePath() + File.separator;
         Map<String, String> fileNameMap = new HashMap<>();
-        innnerEncrypt(new File(srcDirUrl), targetDirUrl, baseDir, pass, fileNameMap, new Integer(0));
+        innnerEncrypt(new File(srcDirUrl), targetDirUrl, baseDir, pass, fileNameMap, new AtomicInteger(0));
         try {
             FileUtils.writeStringToFile(new File(FilenameUtils.concat(targetDirUrl, "index.fbkindex")), JsonUtils.writeValueAsString(fileNameMap), Charset.forName("utf-8"));
         } catch (IOException e) {
@@ -33,7 +34,7 @@ public class DirEncrypt {
     }
 
 
-    private void innnerEncrypt(File srcDir, String targetDirUrl, String baseDir, int pass, Map<String, String> fileNameMap, Integer index) {
+    private void innnerEncrypt(File srcDir, String targetDirUrl, String baseDir, int pass, Map<String, String> fileNameMap, AtomicInteger index) {
         try {
             File[] files = srcDir.listFiles();
 
@@ -45,16 +46,17 @@ public class DirEncrypt {
                     //生成md5
                     String key = FileUtil.getRelativeStandardPath(file, baseDir);
                     long md5 = MD5Util.ketamaHash(key);
-                    String fbkFile = FilenameUtils.concat(targetDirUrl, "" + (index / 100));
+                    String fbkFile = FilenameUtils.concat(targetDirUrl, "" + (index.get() / 100));
                     fbkFile = FilenameUtils.concat(fbkFile, md5 + ".fbk");
                     FileUtils.forceMkdirParent(new File(fbkFile));
                     XorUtil.encryptFile(file.getAbsolutePath(), fbkFile, pass);
                     fileNameMap.put(md5 + ".fbk", key);
-                    index++;
+                    index.incrementAndGet();
                 }
 
             }
         } catch (Exception e) {
+            System.out.println(srcDir.getAbsolutePath() + " exception");
             e.printStackTrace();
             throw new RuntimeException(e);
         }
@@ -103,6 +105,15 @@ public class DirEncrypt {
     }
 
     public static void main(String[] args) throws Exception {
+//        test();
+        Integer a = 0;
+        Integer b = a;
+        b = 100;
+        System.out.println(a);
+        System.out.println(b);
+    }
+
+    private static void test() throws IOException {
         FileUtils.forceDelete(new File(TestData.tTargetDir));
         String targetDirEncrypt = FilenameUtils.concat(TestData.tTargetDir, "dirEncrypt");
         String targetDirEncryptResore = FilenameUtils.concat(TestData.tTargetDir, "dirEncryptRestore");
