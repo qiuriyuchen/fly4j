@@ -118,12 +118,7 @@ public class DirCompareImpl implements DirCompare {
     }
 
     public String getKey(File file, String baseDir) {
-        String key = FilenameUtils.normalize(file.getAbsolutePath());
-        key = FilenameUtils.separatorsToUnix(key);
-        String baseDirTemp = FilenameUtils.normalize(baseDir);
-        baseDirTemp = FilenameUtils.separatorsToUnix(baseDirTemp);
-        key = key.replaceAll(baseDirTemp, "");
-        return key;
+        return FileUtil.getRelativeStandardPath(file, baseDir);
     }
 
     /**

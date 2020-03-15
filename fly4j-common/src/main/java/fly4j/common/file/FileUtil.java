@@ -230,6 +230,15 @@ public class FileUtil {
         return md5;
     }
 
+    public static String getRelativeStandardPath(File file, String baseDir) {
+        String key = FilenameUtils.normalize(file.getAbsolutePath());
+        key = FilenameUtils.separatorsToUnix(key);
+        String baseDirTemp = FilenameUtils.normalize(baseDir);
+        baseDirTemp = FilenameUtils.separatorsToUnix(baseDirTemp);
+        key = key.replaceAll(baseDirTemp, "");
+        return key;
+    }
+
     public static long convertK2M(long kLength) {
 
         return kLength / 1024 / 1024 / 1024;

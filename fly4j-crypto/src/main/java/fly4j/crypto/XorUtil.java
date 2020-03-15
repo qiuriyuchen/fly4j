@@ -1,5 +1,6 @@
 package fly4j.crypto;
 
+import fly4j.common.test.TestData;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
@@ -9,12 +10,11 @@ import java.io.*;
  * Created by guanpanpan on 2016/10/31.
  */
 public class XorUtil {
-    private static String tSourceDir = FilenameUtils.concat(System.getProperty("user.dir"), "testData/source");
-    private static String tTargetDir = FilenameUtils.concat(System.getProperty("user.dir"), "testData/target");
+
 
     public static void main(String[] args) throws Exception {
-        encryptFile(FilenameUtils.concat(tSourceDir, "xorSource.txt"), FilenameUtils.concat(tTargetDir, "xorTarget.fbk"), 123);
-        decryptFile(FilenameUtils.concat(tTargetDir, "xorTarget.fbk"), FilenameUtils.concat(tTargetDir, "xorResote.txt"), 123);
+        encryptFile(FilenameUtils.concat(TestData.tSourceDir, "xorSource.txt"), FilenameUtils.concat(TestData.tTargetDir, "xorTarget.fbk"), 123);
+        decryptFile(FilenameUtils.concat(TestData.tTargetDir, "xorTarget.fbk"), FilenameUtils.concat(TestData.tTargetDir, "xorResote.txt"), 123);
     }
 
 
