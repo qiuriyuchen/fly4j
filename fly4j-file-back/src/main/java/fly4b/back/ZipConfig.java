@@ -61,6 +61,11 @@ public class ZipConfig {
     }
 
     @JsonIgnore
+    public String getTargetMiDir() {
+        return FilenameUtils.concat(getZipToDirPath(), getBackDirName() + "mi") + File.separator;
+    }
+
+    @JsonIgnore
     public String genDestZipFullPath() {
         DateFormat df = new SimpleDateFormat("yy-MM-dd_HH");
         String fileName = OsUtil.getSimpleOsName() + df.format(new Date()) + this.getBackDirName() + ".zip";

@@ -1,6 +1,5 @@
 package fly4j.common.test;
 
-import fly4j.common.DateUtil;
 import fly4j.common.file.FileUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.junit.After;
@@ -11,8 +10,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
 import java.io.File;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author guanpanpan
@@ -30,7 +27,7 @@ public class TestFileUtil {
         System.out.println(TestData.tTargetDir);
         FileUtil.delDir(FilenameUtils.concat(TestData.tTargetDir, "TestFileUtil"));
         Assert.assertTrue(!new File(FilenameUtils.concat(TestData.tTargetDir, "TestFileUtil")).exists());
-        FileUtil.mkdirs(FilenameUtils.concat(TestData.tTargetDir, "TestFileUtil/a/aa/aaa"));
+        FileUtil.forceMkdir(FilenameUtils.concat(TestData.tTargetDir, "TestFileUtil/a/aa/aaa"));
         Assert.assertTrue(new File(FilenameUtils.concat(TestData.tTargetDir, "TestFileUtil/a/aa/aaa")).exists());
     }
 

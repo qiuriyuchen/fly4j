@@ -110,15 +110,11 @@ public class FileUtil {
                 name.endsWith(endStr));
     }
 
-    public static void mkdirs(String dirStr) {
+    public static void forceMkdir(String dirStr) {
         try {
-            File file = new File(dirStr);
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-        } catch (Exception e) {
-            System.out.println("exception:" + dirStr);
-            e.printStackTrace();
+            FileUtils.forceMkdir(new File(dirStr));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

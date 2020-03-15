@@ -65,7 +65,7 @@ public class DirEncrypt {
                 String storeName = fileNameMap.get(file.getName());
                 String storeFullPath = FilenameUtils.concat(targetDirUrl, storeName);
                 //解密
-                FileUtil.mkdirs(FilenameUtils.getFullPath(storeFullPath));
+                FileUtil.forceMkdir(FilenameUtils.getFullPath(storeFullPath));
                 XorUtil.decryptFile(file.getAbsolutePath(), storeFullPath, pass);
             }
         } catch (Exception e) {
@@ -78,8 +78,8 @@ public class DirEncrypt {
     public static void main(String[] args) {
         String targetDirEncrypt = FilenameUtils.concat(TestData.tTargetDir, "dirEncrypt");
         String targetDirEncryptResore = FilenameUtils.concat(targetDirEncrypt, "restore");
-        FileUtil.mkdirs(targetDirEncrypt);
-        FileUtil.mkdirs(targetDirEncryptResore);
+        FileUtil.forceMkdir(targetDirEncrypt);
+        FileUtil.forceMkdir(targetDirEncryptResore);
         DirEncrypt dirEncrypt = new DirEncrypt();
         Map<String, String> fileNameMap = dirEncrypt.encrypt(FilenameUtils.concat(TestData.tSourceDir, "dirEncrypt"), targetDirEncrypt, 123);
         dirEncrypt.reStore(targetDirEncrypt, targetDirEncryptResore, 123, fileNameMap);
