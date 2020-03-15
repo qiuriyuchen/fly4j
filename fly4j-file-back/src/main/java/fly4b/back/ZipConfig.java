@@ -77,7 +77,10 @@ public class ZipConfig {
     public String getLastDestZipFullPath() {
         return lastDestZipFullPath;
     }
-
+    @JsonIgnore
+    public int getPasswordInt() {
+        return Integer.parseInt(password);
+    }
     /**
      * ***********     seter and geter      ************
      */

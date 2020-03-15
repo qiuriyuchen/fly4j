@@ -123,12 +123,6 @@ public class DirZip {
                 log.error("Zip4jTool.zip destZip:" + zipConfig.getLastDestZipFullPath() + " srcFile:" + zipConfig.getBeZipSourceDir(), e);
                 builder.append(zipConfig.getLastDestZipFullPath()).append(" error ").append(e.getMessage()).append(StringConst.N_N);
             }
-            try {
-                FileUtils.forceMkdir(new File(zipConfig.getTargetMiDir()));
-                new DirEncrypt().encrypt(zipConfig.getTargetBackDir(), zipConfig.getTargetMiDir(), 123);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             builder.append(zipConfig.getLastDestZipFullPath()).append(" ziped").append(StringConst.N_N);
         }
 
