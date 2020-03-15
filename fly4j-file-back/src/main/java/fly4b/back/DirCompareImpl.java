@@ -19,8 +19,10 @@ import java.security.MessageDigest;
 import java.util.*;
 
 public class DirCompareImpl implements DirCompare {
-    public static String genType = "md5";
+    //md5 or size
+    public static String genType = "size";
     private FileAndDirFilter noNeedCalMd5FileFilter;
+    private boolean checkEmptyDir = true;
 
     @Override
     public DirCompareResult compar(List<String> compDirs) {
@@ -49,7 +51,7 @@ public class DirCompareImpl implements DirCompare {
                 //取得每个文件夹的文件md5
                 String md5Value = allMap.get(dirIndex).get(key);
                 if (md5Value == null) {
-                    TrackContext.appendTrackInfo(key + " is Delete from " + compDirs.get(dirIndex));
+                    result.addDelFile(compDirs.get(dirIndex) + key);
                 } else {
                     diffDirMd5.put(dirIndex, md5Value);
                     values.add(md5Value);
@@ -77,6 +79,15 @@ public class DirCompareImpl implements DirCompare {
     public void getMd5FileStr(File dirFile, Map<String, String> md5Map, String baseDir) {
         try {
             File[] files = dirFile.listFiles();
+            //如果不是空文件夹，把父亲文件夹加入
+            if (checkEmptyDir) {
+                md5Map.put(getKey(dirFile, baseDir), "dir");
+            } else {
+                if (files.length > 0) {
+                    md5Map.put(getKey(dirFile, baseDir), "dir");
+                }
+            }
+
             for (File file : files) {
                 if (noNeedCalMd5FileFilter.accept(file)) {
                     continue;
@@ -87,10 +98,7 @@ public class DirCompareImpl implements DirCompare {
                 } else {
                     //生成md5
 
-                    String key = file.getAbsolutePath();
-                    baseDir = baseDir.replaceAll("\\\\", "/");
-                    key = key.replaceAll("\\\\", "/");
-                    key = key.replaceAll(baseDir, "");
+                    String key = getKey(file, baseDir);
 
                     if ("size".equals(genType)) {
                         md5Map.put(key, "" + file.length());
@@ -107,6 +115,15 @@ public class DirCompareImpl implements DirCompare {
             throw new RuntimeException(e);
         }
 
+    }
+
+    public String getKey(File file, String baseDir) {
+        String key = FilenameUtils.normalize(file.getAbsolutePath());
+        key = FilenameUtils.separatorsToUnix(key);
+        String baseDirTemp = FilenameUtils.normalize(baseDir);
+        baseDirTemp = FilenameUtils.separatorsToUnix(baseDirTemp);
+        key = key.replaceAll(baseDirTemp, "");
+        return key;
     }
 
     /**

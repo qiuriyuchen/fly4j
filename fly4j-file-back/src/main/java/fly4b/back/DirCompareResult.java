@@ -16,4 +16,5 @@ public class DirCompareResult {
     public void addDelFile(String delFile) {
         this.delFiles.add(delFile);
     }
+
 }
