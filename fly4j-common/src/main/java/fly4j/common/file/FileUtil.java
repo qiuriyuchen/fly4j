@@ -111,9 +111,14 @@ public class FileUtil {
     }
 
     public static void mkdirs(String dirStr) {
-        File file = new File(dirStr);
-        if (!file.exists()) {
-            file.mkdirs();
+        try {
+            File file = new File(dirStr);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+        } catch (Exception e) {
+            System.out.println("exception:" + dirStr);
+            e.printStackTrace();
         }
     }
 

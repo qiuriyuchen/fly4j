@@ -15,21 +15,23 @@ import java.util.Map;
  * Created by guan on 2020/3/15.
  */
 public class DirEncrypt {
-    private Map<String, String> fileNameMap = new HashMap<>();
 
-    public void encrypt(String srcDirUrl, String targetDirUrl, int pass) {
+    public Map<String, String> encrypt(String srcDirUrl, String targetDirUrl, int pass) {
         String baseDir = new File(srcDirUrl).getAbsolutePath() + File.separator;
-        innnerEncrypt(new File(srcDirUrl), targetDirUrl, baseDir, pass);
+        Map<String, String> fileNameMap = new HashMap<>();
+        innnerEncrypt(new File(srcDirUrl), targetDirUrl, baseDir, pass, fileNameMap);
+        return fileNameMap;
     }
 
-    private void innnerEncrypt(File srcDir, String targetDirUrl, String baseDir, int pass) {
+
+    private void innnerEncrypt(File srcDir, String targetDirUrl, String baseDir, int pass, Map<String, String> fileNameMap) {
         try {
             File[] files = srcDir.listFiles();
 
             for (File file : files) {
                 if (file.isDirectory()) {
                     //递归
-                    innnerEncrypt(file, targetDirUrl, baseDir, pass);
+                    innnerEncrypt(file, targetDirUrl, baseDir, pass, fileNameMap);
                 } else {
                     //生成md5
                     String key = FileUtil.getRelativeStandardPath(file, baseDir);
@@ -46,22 +48,25 @@ public class DirEncrypt {
 
     }
 
-    private void innnerDecrypt(File srcDir, String targetDirUrl, String baseDir, int pass) {
+    public void reStore(String srcDir, String targetDirUrl, int pass, Map<String, String> fileNameMap) {
+        this.reStore(new File(srcDir), targetDirUrl, pass, fileNameMap);
+    }
+
+    public void reStore(File srcDir, String targetDirUrl, int pass, Map<String, String> fileNameMap) {
         try {
             File[] files = srcDir.listFiles();
 
             for (File file : files) {
                 if (file.isDirectory()) {
-                    //递归
-                    innnerDecrypt(file, targetDirUrl, baseDir, pass);
-                } else {
-                    //解密存放目录
-                    String storeName = fileNameMap.get(file.getName());
-                    //解密
-                    XorUtil.decryptFile(file.getAbsolutePath(), FilenameUtils.concat(targetDirUrl, storeName), pass);
-
+                    continue;
                 }
 
+                //解密存放目录
+                String storeName = fileNameMap.get(file.getName());
+                String storeFullPath = FilenameUtils.concat(targetDirUrl, storeName);
+                //解密
+                FileUtil.mkdirs(FilenameUtils.getFullPath(storeFullPath));
+                XorUtil.decryptFile(file.getAbsolutePath(), storeFullPath, pass);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,7 +76,12 @@ public class DirEncrypt {
     }
 
     public static void main(String[] args) {
+        String targetDirEncrypt = FilenameUtils.concat(TestData.tTargetDir, "dirEncrypt");
+        String targetDirEncryptResore = FilenameUtils.concat(targetDirEncrypt, "restore");
+        FileUtil.mkdirs(targetDirEncrypt);
+        FileUtil.mkdirs(targetDirEncryptResore);
         DirEncrypt dirEncrypt = new DirEncrypt();
-        dirEncrypt.encrypt(FilenameUtils.concat(TestData.tSourceDir, "dirEncrypt"), FilenameUtils.concat(TestData.tTargetDir, "dirEncrypt"), 123);
+        Map<String, String> fileNameMap = dirEncrypt.encrypt(FilenameUtils.concat(TestData.tSourceDir, "dirEncrypt"), targetDirEncrypt, 123);
+        dirEncrypt.reStore(targetDirEncrypt, targetDirEncryptResore, 123, fileNameMap);
     }
 }
