@@ -194,21 +194,29 @@ public class DirCompareImpl implements DirCompare {
 
     private void checkSingleFile(String checkDir, File md5File, StringBuilder stringBuilder) throws Exception {
         //取得上次的md5
-        String md5Str = FileUtils.readFileToString(md5File, Charset.forName("utf-8"));
-        HashMap<String, String> md5MapRead = JsonUtils.readStringStringHashMap(md5Str);
+        String historyMd5Str = FileUtils.readFileToString(md5File, Charset.forName("utf-8"));
+        HashMap<String, String> historyMd5MapRead = JsonUtils.readStringStringHashMap(historyMd5Str);
 
 
         //取得文件夹的Md5
-        Map<String, String> md5Map = this.getDirMd5Map(checkDir);
+        Map<String, String> currentMd5Map = this.getDirMd5Map(checkDir);
 //        md5Map.forEach((key, value) -> System.out.println(key));
-        for (Map.Entry readEntry : md5MapRead.entrySet()) {
-            String md5New = md5Map.get(readEntry.getKey());
+        for (Map.Entry readEntry : historyMd5MapRead.entrySet()) {
+            String md5New = currentMd5Map.get(readEntry.getKey());
             if (null == md5New) {
                 StringConst.appendLine(stringBuilder, "........delete:" + readEntry.getKey());
             } else if (md5New.equals(readEntry.getValue())) {
 
             } else {
                 StringConst.appendLine(stringBuilder, "........diff:" + readEntry.getKey());
+            }
+
+        }
+
+        for (Map.Entry readEntry : currentMd5Map.entrySet()) {
+            String md5History = historyMd5MapRead.get(readEntry.getKey());
+            if (null == md5History) {
+                StringConst.appendLine(stringBuilder, "........add:" + readEntry.getKey());
             }
 
         }
