@@ -11,6 +11,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -21,6 +22,29 @@ import java.util.*;
 public class FileUtil {
     public static final String utf_8 = "utf-8";
     public static final String gbk = "gbk";
+
+
+    /**
+     * 下载文件---返回下载后的文件存储路径
+     *
+     * @param url      文件地址
+     * @param dir      存储目录
+     * @param fileName 存储文件名
+     * @return
+     */
+    public static void downloadHttpUrl(String url, String dir, String fileName) {
+        try {
+            URL httpurl = new URL(url);
+            File dirfile = new File(dir);
+            if (!dirfile.exists()) {
+                dirfile.mkdirs();
+            }
+            FileUtils.copyURLToFile(httpurl, new File(dir + fileName));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public static boolean delFile4Safe(String fileStr) {
         File f = new File(fileStr);
