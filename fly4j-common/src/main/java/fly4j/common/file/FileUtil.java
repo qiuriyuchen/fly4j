@@ -27,19 +27,14 @@ public class FileUtil {
     /**
      * 下载文件---返回下载后的文件存储路径
      *
-     * @param url      文件地址
-     * @param dir      存储目录
-     * @param fileName 存储文件名
      * @return
      */
-    public static void downloadHttpUrl(String url, String dir, String fileName) {
+    public static void downloadHttpUrl(String url, String filePath) {
         try {
             URL httpurl = new URL(url);
-            File dirfile = new File(dir);
-            if (!dirfile.exists()) {
-                dirfile.mkdirs();
-            }
-            FileUtils.copyURLToFile(httpurl, new File(dir + fileName));
+            File file = new File(filePath);
+            FileUtils.forceMkdirParent(file);
+            FileUtils.copyURLToFile(httpurl, file);
         } catch (Exception e) {
             e.printStackTrace();
         }
