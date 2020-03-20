@@ -24,22 +24,6 @@ public class FileUtil {
     public static final String gbk = "gbk";
 
 
-    /**
-     * 下载文件---返回下载后的文件存储路径
-     *
-     * @return
-     */
-    public static void downloadHttpUrl(String url, String filePath) {
-        try {
-            URL httpurl = new URL(url);
-            File file = new File(filePath);
-            FileUtils.forceMkdirParent(file);
-            FileUtils.copyURLToFile(httpurl, file);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 
     public static boolean delFile4Safe(String fileStr) {
         File f = new File(fileStr);
