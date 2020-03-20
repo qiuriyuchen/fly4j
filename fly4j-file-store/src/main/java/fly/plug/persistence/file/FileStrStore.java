@@ -2,8 +2,6 @@ package fly.plug.persistence.file;
 
 import fly4j.common.JsonUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,17 +11,16 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- *
  * dataDir 数据存储的目录,比如路径为/export/data；下边可以存放不同数据，通过pin和innerDir来区分，可以理解为不通数据库
- * @author guanpanpan created:forget;created is before:2020/03/07
  *
+ * @author guanpanpan created:forget;created is before:2020/03/07
  * @author guanpanpan 2020年3月21日 rename FileKv to FileStrStore
- * 有时候我们总是把简单的事情搞复杂，上面注释留作纪念吧，曾经设计的太复杂了，既然是文件系统，不用非仿作kv,直接改为文件系统，应用随便拼吧
+ *         有时候我们总是把简单的事情搞复杂，上面注释留作纪念吧，曾经设计的太复杂了，既然是文件系统，不用非仿作kv,直接改为文件系统，应用随便拼吧
  */
-public class FileKV {
-    private Charset fileCharset = Charset.forName("utf-8");
+public class FileStrStore {
+    private static Charset fileCharset = Charset.forName("utf-8");
 
-    public void setValue(String storePath, String value) {
+    public static void setValue(String storePath, String value) {
         try {
             FileUtils.writeStringToFile(new File(storePath), value, Charset.forName("utf-8"));
         } catch (IOException e) {
@@ -32,27 +29,28 @@ public class FileKV {
     }
 
 
-    public void setObject(String storePath, Object value) {
-        this.setValue(storePath, JsonUtils.writeValueAsString(value));
+    public static void setObject(String storePath, Object value) {
+        setValue(storePath, JsonUtils.writeValueAsString(value));
     }
-    public String getValue(String storePath) {
+
+    public static String getValue(String storePath) {
         return readFileToStr(storePath);
     }
 
 
-    public <T> T getObject(String storePath, Class<T> cls) {
-        String json = this.getValue(storePath);
+    public static <T> T getObject(String storePath, Class<T> cls) {
+        String json = getValue(storePath);
         return JsonUtils.readValue(json, cls);
     }
 
-    public void delete(String storePath) {
+    public static void delete(String storePath) {
         File file = new File(storePath);
 
         if (file.isFile() && file.exists())
             file.delete();
     }
 
-    public List<String> getValues(String parentPath, String keyPre) {
+    public static List<String> getValues(String parentPath, String keyPre) {
         List<String> values = new ArrayList<>();
         Collection<File> files = listDirFiles(parentPath);
         for (File file : files) {
@@ -68,7 +66,7 @@ public class FileKV {
         return values;
     }
 
-    protected String readFileToStr(File file) {
+    protected static String readFileToStr(File file) {
         if (!file.exists()) {
             return null;
         }
@@ -78,7 +76,8 @@ public class FileKV {
             throw new RuntimeException(e);
         }
     }
-    public List<String> getChildFileNames(String storePath, String keyPre) {
+
+    public static List<String> getChildFileNames(String storePath, String keyPre) {
         List<String> values = new ArrayList<>();
         Collection<File> files = listDirFiles(storePath);
         for (File file : files) {
@@ -91,6 +90,7 @@ public class FileKV {
         }
         return values;
     }
+
     private static Collection<File> listDirFiles(String dirStr) {
         File file = new File(dirStr);
         if (!file.isDirectory()) {
@@ -100,7 +100,8 @@ public class FileKV {
         Collection<File> files = FileUtils.listFiles(file, null, false);
         return files;
     }
-    protected String readFileToStr(String filePath) {
+
+    protected static String readFileToStr(String filePath) {
         return readFileToStr(new File(filePath));
     }
 
