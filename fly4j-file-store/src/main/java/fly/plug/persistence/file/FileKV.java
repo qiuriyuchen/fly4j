@@ -1,104 +1,107 @@
 package fly.plug.persistence.file;
 
 import fly4j.common.JsonUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
- * dataDir 数据存储的目录,比如路径为/export/data；下边可以存放不同数据，通过pin和innerDir来区分，可以理解为不通数据库
- * pin   可以理解为不同的数据库
- * secondDbSpace 细分数据,可以为空,比如存放文章和用户，分别为article和user，则对应数据目录分别为/export/data/article和/export/data/user
- * <p>
- * dataDir
- * ------/pin
- * ------/pin/article/
- * ------/pin/user/
- * ------/pin2
- * ------/pin/article/
- * 如果pin和innerDir为空，则退化为全局数据Map
- * bseDir 数据文件
- * key :作为文件名存储
- * value：作为文件内容
  *
- * @author guanpanpan
- * @date created:forget;created is before:2020/03/07
+ * dataDir 数据存储的目录,比如路径为/export/data；下边可以存放不同数据，通过pin和innerDir来区分，可以理解为不通数据库
+ * @author guanpanpan created:forget;created is before:2020/03/07
+ *
+ * @author guanpanpan 2020年3月21日 rename FileKv to FileStrStore
+ * 有时候我们总是把简单的事情搞复杂，上面注释留作纪念吧，曾经设计的太复杂了，既然是文件系统，不用非仿作kv,直接改为文件系统，应用随便拼吧
  */
 public class FileKV {
-    private FileStrStore fileStrStore = new FileStrStore();
+    private Charset fileCharset = Charset.forName("utf-8");
 
-    private String dataDir;
-    private String secondDbSpace;
-
-    public FileKV(String dataDir) {
-        reset(dataDir, null);
+    public void setValue(String storePath, String value) {
+        try {
+            FileUtils.writeStringToFile(new File(storePath), value, Charset.forName("utf-8"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public FileKV(String dataDir, String secondDbSpace) {
-        reset(dataDir, secondDbSpace);
+
+    public void setObject(String storePath, Object value) {
+        this.setValue(storePath, JsonUtils.writeValueAsString(value));
+    }
+    public String getValue(String storePath) {
+        return readFileToStr(storePath);
     }
 
-    public void reset(String baseDir, String secondDbSpace) {
-        this.dataDir = baseDir;
-        this.secondDbSpace = secondDbSpace;
-    }
 
-    /**
-     * @param id 主键，可以理解为Map的key
-     */
-    public void setValue(String firstDbSpace, String id, String value) {
-        String storePath = getStoreFilePath(firstDbSpace, id);
-        fileStrStore.setValue(storePath, value);
-    }
-
-    public void setValue(String id, String value) {
-        this.setValue("", id, value);
-    }
-
-    public void setObject(String id, Object value) {
-        this.setValue(id, JsonUtils.writeValueAsString(value));
-    }
-
-    public List<String> getValues(String firstDbSpace, String keyPre) {
-        return fileStrStore.getValues(getStoreDirPath(firstDbSpace), keyPre);
-    }
-
-    public String getValue(String firstDbSpace, String id) {
-        String filePath = getStoreFilePath(firstDbSpace, id);
-        return fileStrStore.getValue(filePath);
-    }
-
-    public String getValue(String id) {
-        return getValue("", id);
-    }
-
-    public <T> T getObject(String id, Class<T> cls) {
-        String json = this.getValue(id);
+    public <T> T getObject(String storePath, Class<T> cls) {
+        String json = this.getValue(storePath);
         return JsonUtils.readValue(json, cls);
     }
 
-    public void delete(String firstDbSpace, String id) {
-        String filePath = getStoreFilePath(firstDbSpace, id);
-        fileStrStore.delete(filePath);
+    public void delete(String storePath) {
+        File file = new File(storePath);
+
+        if (file.isFile() && file.exists())
+            file.delete();
     }
 
-    public void delete(String id) {
-        this.delete("", id);
-    }
+    public List<String> getValues(String parentPath, String keyPre) {
+        List<String> values = new ArrayList<>();
+        Collection<File> files = listDirFiles(parentPath);
+        for (File file : files) {
+            if (file.getName().startsWith(".")) {
+                continue;
+            }
+            if (file.getName().startsWith(keyPre)) {
 
-    private String getStoreDirPath(String firstDbSpace) {
-        if (StringUtils.isBlank(firstDbSpace)) {
-            return dataDir;
+                String json = readFileToStr(file);
+                values.add(json);
+            }
         }
-        if (StringUtils.isBlank(secondDbSpace)) {
-            return FilenameUtils.concat(dataDir, firstDbSpace);
-        }
-        return FilenameUtils.concat(FilenameUtils.concat(dataDir, firstDbSpace), secondDbSpace);
+        return values;
     }
 
-    public String getStoreFilePath(String pin, String id) {
-        return FilenameUtils.concat(getStoreDirPath(pin), id);
+    protected String readFileToStr(File file) {
+        if (!file.exists()) {
+            return null;
+        }
+        try {
+            return FileUtils.readFileToString(file, fileCharset);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public List<String> getChildFileNames(String storePath, String keyPre) {
+        List<String> values = new ArrayList<>();
+        Collection<File> files = listDirFiles(storePath);
+        for (File file : files) {
+            if (file.getName().startsWith(".")) {
+                continue;
+            }
+            if (file.getName().startsWith(keyPre)) {
+                values.add(file.getName());
+            }
+        }
+        return values;
+    }
+    private static Collection<File> listDirFiles(String dirStr) {
+        File file = new File(dirStr);
+        if (!file.isDirectory()) {
+            return new ArrayList<File>();
+        }
+
+        Collection<File> files = FileUtils.listFiles(file, null, false);
+        return files;
+    }
+    protected String readFileToStr(String filePath) {
+        return readFileToStr(new File(filePath));
     }
 
 
