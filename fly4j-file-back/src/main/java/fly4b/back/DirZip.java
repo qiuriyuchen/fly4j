@@ -69,7 +69,6 @@ public class DirZip {
         for (ZipConfig zipConfig : getZipConfigList()) {
             File[] files = new File(zipConfig.getZipToDirPath()).listFiles();
             for (File file : files) {
-
                 if (file.isDirectory()) {
                     //上次拷贝过来的文件
                     FileUtils.deleteDirectory(file);

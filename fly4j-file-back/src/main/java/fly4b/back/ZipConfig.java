@@ -2,6 +2,7 @@ package fly4b.back;
 
 import fly4j.common.os.OsUtil;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import java.io.File;
@@ -40,7 +41,12 @@ public class ZipConfig {
      */
     @JsonIgnore
     private String getBackDirName() {
-        return FilenameUtils.getBaseName(this.getBeZipSourceDir());
+
+
+//            不可识别.开头文件
+        String dirName = FilenameUtils.getBaseName(this.getBeZipSourceDir());
+        return StringUtils.isNotBlank(dirName) ? dirName :
+                new File(this.getBeZipSourceDir()).getName();
     }
 
     /**
@@ -77,10 +83,12 @@ public class ZipConfig {
     public String getLastDestZipFullPath() {
         return lastDestZipFullPath;
     }
+
     @JsonIgnore
     public int getPasswordInt() {
         return Integer.parseInt(password);
     }
+
     /**
      * ***********     seter and geter      ************
      */
