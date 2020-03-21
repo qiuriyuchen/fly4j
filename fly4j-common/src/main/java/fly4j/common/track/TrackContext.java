@@ -19,6 +19,8 @@ public class TrackContext {
     private StringBuilder trackInfoStrBuilder = new StringBuilder();
 
     public static String getTrackInfo() {
+        if(threadLocal.get()==null)
+            return "";
         return threadLocal.get().trackInfoStrBuilder.toString();
     }
 
