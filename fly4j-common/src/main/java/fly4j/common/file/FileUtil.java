@@ -24,7 +24,6 @@ public class FileUtil {
     public static final String gbk = "gbk";
 
 
-
     public static boolean delFile4Safe(String fileStr) {
         File f = new File(fileStr);
         if ((f.isDirectory() && f.listFiles().length == 0) || !f.isDirectory()) {
@@ -234,8 +233,8 @@ public class FileUtil {
         return md5;
     }
 
-    public static String getRelativeStandardPath(File file, String baseDir) {
-        String key = FilenameUtils.normalize(file.getAbsolutePath());
+    public static String getRelativeStandardPath(String absolutePath, String baseDir) {
+        String key = FilenameUtils.normalize(absolutePath);
         key = FilenameUtils.separatorsToUnix(key);
         String baseDirTemp = FilenameUtils.normalize(baseDir);
         baseDirTemp = FilenameUtils.separatorsToUnix(baseDirTemp);
