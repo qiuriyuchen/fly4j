@@ -118,7 +118,7 @@ public class DirCompareImpl implements DirCompare {
     }
 
     public String getKey(File file, String baseDir) {
-        return FileUtil.getRelativeStandardPath(file, baseDir);
+        return FileUtil.getRelativeStandardPath(file.getAbsolutePath(), baseDir);
     }
 
     /**

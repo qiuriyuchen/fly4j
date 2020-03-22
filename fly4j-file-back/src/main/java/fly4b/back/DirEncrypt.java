@@ -44,7 +44,7 @@ public class DirEncrypt {
                     innnerEncrypt(file, targetDirUrl, baseDir, pass, fileNameMap, index);
                 } else {
                     //生成md5
-                    String key = FileUtil.getRelativeStandardPath(file, baseDir);
+                    String key = FileUtil.getRelativeStandardPath(file.getAbsolutePath(), baseDir);
                     long md5 = MD5Util.ketamaHash(key);
                     String fbkFile = FilenameUtils.concat(targetDirUrl, "" + (index.get() / 100));
                     fbkFile = FilenameUtils.concat(fbkFile, md5 + ".fbk");
