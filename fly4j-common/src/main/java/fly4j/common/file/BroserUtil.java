@@ -6,29 +6,6 @@ package fly4j.common.file;
 public class BroserUtil {
 
 
-    /**
-     * This Method converts a byte size in a kbytes or Mbytes size, depending on the size
-     *
-     * @param size The size in bytes
-     * @return String with size and unit
-     */
-    public static String convertFileSize(long size) {
-        int divisor = 1;
-        String unit = "bytes";
-        if (size >= 1024 * 1024) {
-            divisor = 1024 * 1024;
-            unit = "MB";
-        } else if (size >= 1024) {
-            divisor = 1024;
-            unit = "KB";
-        } else {
-            return size / divisor + " " + unit;
-        }
-
-        String aftercomma = "" + 100 * (size % divisor) / divisor;
-        if (aftercomma.length() == 1) aftercomma = "0" + aftercomma;
-        return size / divisor + "." + aftercomma + " " + unit;
-    }
 
 
 

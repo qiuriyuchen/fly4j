@@ -10,8 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static fly4j.common.file.BroserUtil.convertFileSize;
-
 /**
  * 用来前台展示文件信息
  *
@@ -57,11 +55,11 @@ public class FileInfo {
         isDirectory = file.isDirectory();
         if (!isDirectory) {
             extMap.put("size", file.length());
-            extMap.put("manSize", convertFileSize(file.length()));
+            ;
+            extMap.put("manSize",FileUtils.byteCountToDisplaySize(file.length()));
 
         }
-        String date = dateFormat.format(new Date(file.lastModified()));
-        extMap.put("date", date);
+        extMap.put("lmDate", new Date(file.lastModified()));
 
         String type = "File"; // This String will tell the extension of the file
         if (file.isDirectory()) type = "DIR"; // It's a DIR
