@@ -16,9 +16,6 @@ import java.util.Map;
  * @author guanpanpan
  */
 public class FileInfo {
-    public static DateFormat dateFormat = DateFormat.getDateTimeInstance();
-
-
     //相对于下载网址的路径
     public final String fileRelativePath;
     public final boolean pic;
