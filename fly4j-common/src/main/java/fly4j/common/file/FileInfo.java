@@ -19,16 +19,13 @@ public class FileInfo {
     public static DateFormat dateFormat = DateFormat.getDateTimeInstance();
 
 
-
     //相对于下载网址的路径
     public final String fileRelativePath;
     public final boolean pic;
-    private final String displaySize;
     //文件名称
     public final String fileName;
     //文件绝对路径
     public final String absolutePath;
-    public final String lastModified;
     public final boolean isDirectory;
 
     //扩展属性
@@ -48,15 +45,10 @@ public class FileInfo {
         }
 
         this.fileName = file.getName();
-        this.displaySize = FileUtils.byteCountToDisplaySize(file.length());
-        long time = file.lastModified();
-        this.lastModified = DateUtil.formatStrinCommon(new Date(time));
-
         isDirectory = file.isDirectory();
         if (!isDirectory) {
             extMap.put("size", file.length());
-            ;
-            extMap.put("manSize",FileUtils.byteCountToDisplaySize(file.length()));
+            extMap.put("displaySize", FileUtils.byteCountToDisplaySize(file.length()));
 
         }
         extMap.put("lmDate", new Date(file.lastModified()));
@@ -71,7 +63,6 @@ public class FileInfo {
         extMap.put("type", type);
 
 
-
     }
 
     @Override
@@ -82,8 +73,9 @@ public class FileInfo {
     public String getFileRelativePathPic() {
         return "/pic/" + fileRelativePath;
     }
-    public boolean isPacked(){
-       return BroserUtil.isPacked(absolutePath, true);
+
+    public boolean isPacked() {
+        return BroserUtil.isPacked(absolutePath, true);
     }
 
 
