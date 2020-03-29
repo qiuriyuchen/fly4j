@@ -73,8 +73,19 @@ public class ZipConfig {
 
     @JsonIgnore
     public String genDestZipFullPath() {
+        if (StringUtils.isNotBlank(this.lastDestZipFullPath)) {
+            return this.lastDestZipFullPath;
+        }
         DateFormat df = new SimpleDateFormat("yy-MM-dd_HH");
         String fileName = OsUtil.getSimpleOsName() + df.format(new Date()) + this.getBackDirName().replace('.', '_') + ".zip";
+        this.lastDestZipFullPath = FilenameUtils.concat(this.getZipToDirPath(), fileName);
+        return this.lastDestZipFullPath;
+    }
+
+    @JsonIgnore
+    public String genDestZipFullPath(String aliasDirName) {
+        DateFormat df = new SimpleDateFormat("yy-MM-dd_HH");
+        String fileName = OsUtil.getSimpleOsName() + df.format(new Date()) + aliasDirName.replace('.', '_') + ".zip";
         this.lastDestZipFullPath = FilenameUtils.concat(this.getZipToDirPath(), fileName);
         return this.lastDestZipFullPath;
     }
