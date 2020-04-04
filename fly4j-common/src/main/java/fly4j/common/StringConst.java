@@ -26,6 +26,10 @@ public class StringConst {
         stringBuilder.append(line).append(StringConst.N_N);
     }
 
+    public static String getConsoleTitle(String title) {
+        return "*******************************************" + title + "*******************************************";
+    }
+
     public static void main(String[] args) {
         System.out.println("a\nb".replaceAll(N_N, N_BR));
     }
