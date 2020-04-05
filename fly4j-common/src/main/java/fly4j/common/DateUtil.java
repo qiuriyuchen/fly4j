@@ -13,6 +13,7 @@ final public class DateUtil {
     public static void main(String[] args) throws Exception {
         System.out.println((TimeUnit.SECONDS.toHours(43200)) + "小时");
         System.out.println((TimeUnit.SECONDS.toDays(1296000)) + "天");
+        System.out.println(getYearTwoStr(getDate("2014-12-21 14:31:03")));
     }
 
 
@@ -45,6 +46,10 @@ final public class DateUtil {
     }
     public static String getYearStr(Date date) {
         DateFormat df = new SimpleDateFormat("yyyy");
+        return df.format(date);
+    }
+    public static String getYearTwoStr(Date date) {
+        DateFormat df = new SimpleDateFormat("yy");
         return df.format(date);
     }
     public static String getDateStrForName(Date date) {
