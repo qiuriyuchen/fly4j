@@ -43,7 +43,10 @@ final public class DateUtil {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         return df.format(date);
     }
-
+    public static String getYearStr(Date date) {
+        DateFormat df = new SimpleDateFormat("yyyy");
+        return df.format(date);
+    }
     public static String getDateStrForName(Date date) {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd--HH-mm-ss");
         return df.format(date);
