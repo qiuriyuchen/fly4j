@@ -12,11 +12,19 @@ public class FileAndDirFilter implements FileFilter {
     private Set<String> filterDirNames = new HashSet<>();
     //过滤文件名
     private Set<String> filterSuffixNames = new HashSet<>();
+    private Set<String> alwaysNotAcceptNames = new HashSet<>();
     private boolean includeFile = true;
     private boolean isIncludeDir = true;
 
     @Override
     public boolean accept(File file) {
+        if (null != alwaysNotAcceptNames) {
+            for (String filterDir : alwaysNotAcceptNames) {
+                if (file.getAbsolutePath().contains(filterDir)) {
+                    return false;
+                }
+            }
+        }
         if (null != filterDirNames) {
             for (String filterDir : this.getFilterDirNames()) {
                 if (file.getAbsolutePath().contains(filterDir)) {
@@ -54,5 +62,9 @@ public class FileAndDirFilter implements FileFilter {
 
     public void setIncludeFile(boolean includeFile) {
         this.includeFile = includeFile;
+    }
+
+    public void setAlwaysNotAcceptNames(Set<String> alwaysNotAcceptNames) {
+        this.alwaysNotAcceptNames = alwaysNotAcceptNames;
     }
 }

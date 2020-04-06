@@ -163,7 +163,7 @@ public class DirZip {
                             e.printStackTrace();
                         }
                     }
-                    return;
+                    continue;
                 }
 
                 //递归
