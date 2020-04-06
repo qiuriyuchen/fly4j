@@ -41,18 +41,37 @@ final public class DateUtil {
      * @return
      */
     public static String getDayStr(Date date) {
+        if (null == date) {
+            return "";
+        }
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         return df.format(date);
     }
+    public static String getDayStrCn(Date date) {
+        if (null == date) {
+            return "";
+        }
+        DateFormat df = new SimpleDateFormat("yyyy年MM月dd日");
+        return df.format(date);
+    }
     public static String getYearStr(Date date) {
+        if (null == date) {
+            return "";
+        }
         DateFormat df = new SimpleDateFormat("yyyy");
         return df.format(date);
     }
     public static String getYearTwoStr(Date date) {
+        if (null == date) {
+            return "";
+        }
         DateFormat df = new SimpleDateFormat("yy");
         return df.format(date);
     }
     public static String getDateStrForName(Date date) {
+        if (null == date) {
+            return "";
+        }
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd--HH-mm-ss");
         return df.format(date);
     }
