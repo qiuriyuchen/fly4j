@@ -65,15 +65,14 @@ public class Zip4jTool {
             throw new RuntimeException("password is empty");
         }
 
-        ZipFile zipFile = null;
-        zipFile = new ZipFile(zipfile, passwd.toCharArray());
+        ZipFile zipFile = new ZipFile(zipfile, passwd.toCharArray());
 //        zipFile.setFileNameCharset("UTF-8");//在GBK系统中需要设置
         if (!zipFile.isValidZipFile()) {
             throw new ZipException("压缩文件不合法，可能已经损坏！");
         }
 
         File file = new File(dest);
-        if (file.isDirectory() && !file.exists()) {
+        if (!file.exists()) {
             file.mkdirs();
         }
         zipFile.extractAll(dest);
@@ -81,15 +80,14 @@ public class Zip4jTool {
 
     public static void unZip(String zipfile, String dest) throws ZipException {
 
-        ZipFile zipFile = null;
-        zipFile = new ZipFile(zipfile);
+        ZipFile zipFile = new ZipFile(zipfile);
 //        zipFile.setFileNameCharset("UTF-8");//在GBK系统中需要设置
         if (!zipFile.isValidZipFile()) {
             throw new ZipException("压缩文件不合法，可能已经损坏！");
         }
 
         File file = new File(dest);
-        if (file.isDirectory() && !file.exists()) {
+        if (file.exists()) {
             file.mkdirs();
         }
         zipFile.extractAll(dest);

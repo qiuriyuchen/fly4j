@@ -51,6 +51,10 @@ public class TestZip4jTool {
         Assert.assertEquals("bb中国", FileUtils.readFileToString(new File(path + "testDir/childDir/bb.txt"), Charset.forName("utf-8")));
         System.out.println("end");
     }
+    public static void main(String[] args) throws Exception {
+        Zip4jTool.unZip("/export/testflyzip/b.zip","/export/testflyzip/","fly123456");
+        System.out.println("run end");
+    }
 
     @After
     public void tearDown() throws Exception {
