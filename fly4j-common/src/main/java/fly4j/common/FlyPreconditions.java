@@ -2,11 +2,11 @@ package fly4j.common;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Objects;
+
 public class FlyPreconditions {
     public static <T> T checkNotNull(T reference, String errorMsg) {
-        if (null == reference) {
-            throw new NullPointerException(errorMsg);
-        }
+        Objects.requireNonNull(reference, errorMsg);
         if (reference instanceof String) {
             if (StringUtils.isBlank((String) reference)) {
                 throw new IllegalArgumentException(errorMsg);
@@ -16,9 +16,7 @@ public class FlyPreconditions {
     }
 
     public static <T> T checkNotNull(T reference) {
-        if (null == reference) {
-            throw new NullPointerException();
-        }
+        Objects.requireNonNull(reference);
         if (reference instanceof String) {
             if (StringUtils.isBlank((String) reference)) {
                 throw new IllegalArgumentException();
