@@ -3,19 +3,23 @@ this project is separated from my other project fly(a knowledge management syste
 ## cache
 
 ```
-    FlyCache flyCache = new FlyCacheJVM(1000);
-    flyCache.put("akey", "avalue", 2);
-    
-    flyCache.get("akey")
-    
-    flyCache.ttl("akey")
+//1000 is the maxSize
+FlyCache flyCache = new FlyCacheJVM(1000);
+//2 is the cache life
+flyCache.put("a", "123", 2);
+// it will be return 123
+flyCache.get("akey");
+// it will be return left life
+flyCache.ttl("akey");
 ```
 
 ## LimitRate
 
 ```
-  FlyCache flyCache = new FlyCacheJVM(1000);
-  LimitRate limitRate = new LimitRateImpl(flyCache, 20, 2);
-  limitRate.isHotLimit("127.0.0.1")
+FlyCache flyCache = new FlyCacheJVM(1000);
+// 20 is the between time ,2 is the limitNum
+LimitRate limitRate = new LimitRateImpl(flyCache, 20, 2);
+// return is limit
+boolean isHot = limitRate.isHotLimit("127.0.0.1");
 ```
 

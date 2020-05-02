@@ -18,4 +18,15 @@ public class TestFlyCache {
         Assert.assertTrue(flyCache.ttl("akey") < 0);
     }
 
+    public void demo() {
+        //1000 is the maxSize
+        FlyCache flyCache = new FlyCacheJVM(1000);
+        //2 is the cache life
+        flyCache.put("a", "123", 2);
+        // it will be return 123
+        flyCache.get("akey");
+        // it will be return left life
+        flyCache.ttl("akey");
+    }
+
 }

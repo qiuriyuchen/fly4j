@@ -27,4 +27,11 @@ public class TestLimitRate {
         }
     }
 
+    public void demo() {
+        FlyCache flyCache = new FlyCacheJVM(1000);
+        // 20 is the between time ,2 is the limitNum
+        LimitRate limitRate = new LimitRateImpl(flyCache, 20, 2);
+        // return is limit
+        boolean isHot = limitRate.isHotLimit("127.0.0.1");
+    }
 }
