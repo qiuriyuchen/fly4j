@@ -53,7 +53,7 @@ public class WebUtil {
 
     }
 
-    public static int getParameterInt(HttpServletRequest request, String paramName, int defaultValue) {
+    public static int getParameterInt(HttpServletRequest request, String paramName, Integer defaultValue) {
         return request.getParameter(paramName) != null ? Integer.parseInt(request.getParameter(paramName)) : defaultValue;
 
     }
