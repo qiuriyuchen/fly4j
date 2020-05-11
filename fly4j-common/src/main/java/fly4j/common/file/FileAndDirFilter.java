@@ -1,5 +1,7 @@
 package fly4j.common.file;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
@@ -7,6 +9,8 @@ import java.io.FileFilter;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
 public class FileAndDirFilter implements FileFilter {
     //过滤的路径
     private Set<String> filterDirNames = new HashSet<>();
@@ -40,31 +44,4 @@ public class FileAndDirFilter implements FileFilter {
         return false;
     }
 
-    public Set<String> getFilterDirNames() {
-        return filterDirNames;
-    }
-
-    public void setFilterDirNames(Set<String> filterDirNames) {
-        this.filterDirNames = filterDirNames;
-    }
-
-    public Set<String> getFilterSuffixNames() {
-        return filterSuffixNames;
-    }
-
-    public void setFilterSuffixNames(Set<String> filterSuffixNames) {
-        this.filterSuffixNames = filterSuffixNames;
-    }
-
-    public void setIsIncludeDir(boolean isIncludeDir) {
-        this.isIncludeDir = isIncludeDir;
-    }
-
-    public void setIncludeFile(boolean includeFile) {
-        this.includeFile = includeFile;
-    }
-
-    public void setAlwaysNotAcceptNames(Set<String> alwaysNotAcceptNames) {
-        this.alwaysNotAcceptNames = alwaysNotAcceptNames;
-    }
 }

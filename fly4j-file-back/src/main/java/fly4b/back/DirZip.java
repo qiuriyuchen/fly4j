@@ -3,6 +3,7 @@ package fly4b.back;
 import fly4b.back.zip.Zip4jTool;
 import fly4j.common.JsonUtils;
 import fly4j.common.StringConst;
+import lombok.Setter;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Setter
 public class DirZip {
     public static final Log log = LogFactory.getLog(DirZip.class);
     protected FileFilter noNeedBackFileFilter;
@@ -28,7 +30,7 @@ public class DirZip {
 
     public String executeCheck() throws Exception {
         StringBuilder builder = new StringBuilder();
-        for (ZipConfig zipConfig : getZipConfigList()) {
+        for (ZipConfig zipConfig : zipConfigs) {
             builder.append(dirCompare.check(zipConfig.getBeZipSourceDir(), 1)).append(StringConst.N_N);
         }
         return builder.toString();
@@ -53,7 +55,7 @@ public class DirZip {
 
 
         //在要备份的文件夹生成Md5文件 gen md5File for back dirs
-        getZipConfigList().forEach(zipConfig -> {
+        zipConfigs.forEach(zipConfig -> {
             try {
                 Map<String, String> md5Map = dirCompare.getDirMd5Map(zipConfig.getBeZipSourceDir());
                 String md5FilePath = getMd5FilePath(zipConfig);
@@ -66,7 +68,7 @@ public class DirZip {
         });
 
         //删除上次备份文件 delete last backFile
-        for (ZipConfig zipConfig : getZipConfigList()) {
+        for (ZipConfig zipConfig : zipConfigs) {
             File[] files = new File(zipConfig.getZipToDirPath()).listFiles();
             for (File file : files) {
                 if (file.isDirectory()) {
@@ -92,7 +94,7 @@ public class DirZip {
 
 
         //删除上次拷贝过去的备份文件，并拷贝到临时目录
-        for (ZipConfig zipConfig : getZipConfigList()) {
+        for (ZipConfig zipConfig : zipConfigs) {
             FileUtils.forceMkdir(new File(zipConfig.getTargetBackDir()));
             FileUtils.copyDirectory(new File(zipConfig.getBeZipSourceDir()), new File(zipConfig.getTargetBackDir()));
             System.out.println("copy " + zipConfig.getBeZipSourceDir() + " ---> " + zipConfig.getTargetBackDir());
@@ -100,7 +102,7 @@ public class DirZip {
 
 
         //删除不需要备份的文件 delete no need back files,eg:target .git etc.
-        getZipConfigList().forEach(zipConfig -> {
+        zipConfigs.forEach(zipConfig -> {
             this.deleteNoNeedBackFloder(new File(zipConfig.getTargetBackDir()));
         });
         System.out.println("TargetFileDel end");
@@ -113,7 +115,7 @@ public class DirZip {
             }
         }
         //执行备份 backFile
-        for (ZipConfig zipConfig : getZipConfigList()) {
+        for (ZipConfig zipConfig : zipConfigs) {
             DateFormat df = new SimpleDateFormat("yy-MM-dd_HH");
             try {
                 Zip4jTool.zip(zipConfig.genDestZipFullPath(), zipConfig.getTargetBackDir(), zipConfig.getPassword());
@@ -195,34 +197,4 @@ public class DirZip {
 //
 //    }
 
-    /**
-     * **************************************************** seter and geter*************************************
-     */
-    public void setDirCompare(DirCompare dirCompare) {
-        this.dirCompare = dirCompare;
-    }
-
-    public List<ZipConfig> getZipConfigList() {
-        return zipConfigs;
-    }
-
-    public void reSetZipConfigs(List<ZipConfig> zipConfigs) {
-        this.zipConfigs = zipConfigs;
-    }
-
-    public void setZipConfigs(List<ZipConfig> zipConfigs) {
-        this.zipConfigs = zipConfigs;
-    }
-
-    public void setNoNeedBackFileFilter(FileFilter noNeedBackFileFilter) {
-        this.noNeedBackFileFilter = noNeedBackFileFilter;
-    }
-
-    public FileFilter getNoNeedBackFileFilter() {
-        return noNeedBackFileFilter;
-    }
-
-    public void setAfterCopySleppTime(long afterCopySleppTime) {
-        this.afterCopySleppTime = afterCopySleppTime;
-    }
 }
