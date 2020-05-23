@@ -7,11 +7,8 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 
 import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.net.URL;
 import java.util.*;
 
 /**
@@ -252,18 +249,16 @@ public class FileUtil {
     }
 
 
-    public static void writeFileToResponse(HttpServletResponse response, File file) {
+    public static void writeFileToResponse(OutputStream servletOutputStream, File file) {
 
         /***
          * 把文件流写入客户端
          */
         InputStream inputStream = null;
-        ServletOutputStream servletOutputStream = null;
         try {
             // 创建输入流，读取文件到内存
             inputStream = new FileInputStream(file);
             // 创建输出流，输出内存到客户端
-            servletOutputStream = response.getOutputStream();
 //            int readLength;
 //            byte[] buf = new byte[4096];
 //            while (((readLength = inputStream.read(buf)) != -1)) {

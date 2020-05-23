@@ -89,20 +89,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!--web-->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <!--<scope>provided</scope>-->
-
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jsp-api</artifactId>
-            <version>2.0</version>
-            <!--<scope>provided</scope>-->
-        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -186,11 +172,8 @@
         </plugins>
     </build>
     <modules>
-        <module>fly4j-cache</module>
-        <module>fly4j-file-store</module>
         <module>fly4j-file-back</module>
         <module>fly4j-http</module>
-        <module>fly4j-crypto</module>
         <module>fly4j-common</module>
         <module>fly4j-frame</module>
     </modules>

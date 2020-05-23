@@ -1,11 +1,10 @@
 package fly4b.back;
 
 import fly4j.common.JsonUtils;
-import fly4j.common.file.FileNameUtilHelper;
 import fly4j.common.file.FileUtil;
 import fly4j.common.test.TestData;
-import fly4j.crypto.MD5Util;
-import fly4j.crypto.XorUtil;
+import fly4j.common.crypto.MD5Util;
+import fly4j.common.crypto.XorUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
