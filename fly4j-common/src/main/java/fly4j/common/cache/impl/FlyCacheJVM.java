@@ -1,23 +1,21 @@
 package fly4j.common.cache.impl;
 
 import fly4j.common.cache.FlyCache;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+@NoArgsConstructor
+@Slf4j
 public class FlyCacheJVM implements FlyCache {
 
-    private static final Log log = LogFactory.getLog(FlyCacheJVM.class);
     private Map<String, CacheInfo> cacheInfoMap = new ConcurrentHashMap<String, CacheInfo>();
     private ConcurrentLinkedQueue<String> keyQueue = new ConcurrentLinkedQueue<String>();
     private int QUEUESIZE = 1000;
-
-    public FlyCacheJVM() {
-    }
 
     public FlyCacheJVM(int QUEUESIZE) {
         this.QUEUESIZE = QUEUESIZE;
