@@ -254,29 +254,21 @@ public class FileUtil {
         /***
          * 把文件流写入客户端
          */
-        InputStream inputStream = null;
-        try {
+        try (InputStream inputStream = new FileInputStream(file)) {
             // 创建输入流，读取文件到内存
-            inputStream = new FileInputStream(file);
             // 创建输出流，输出内存到客户端
 //            int readLength;
 //            byte[] buf = new byte[4096];
 //            while (((readLength = inputStream.read(buf)) != -1)) {
 //                servletOutputStream.write(buf, 0, readLength);
 //            }
-            IOUtils.copy(inputStream, servletOutputStream);
+            inputStream.transferTo(servletOutputStream);
+//            IOUtils.copy(inputStream, servletOutputStream);
             servletOutputStream.flush();
 
         } catch (IOException e) {
             throw new RuntimeException("文件输出到客户端异常", e);
         } finally {
-            if (null != inputStream) {
-                try {
-                    inputStream.close();
-                } catch (IOException e1) {
-//                    LogUtil.error(LogUtil.FILE_EXCEPTION, "inputStream.close exception", e1);
-                }
-            }
             if (null != servletOutputStream) {
                 try {
                     servletOutputStream.close();
