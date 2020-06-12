@@ -6,6 +6,9 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -15,14 +18,15 @@ import java.util.List;
  *
  * @author guanpanpan created:forget;created is before:2020/03/07
  * @author guanpanpan 2020年3月21日 rename FileKv to FileStrStore
- *         有时候我们总是把简单的事情搞复杂，上面注释留作纪念吧，曾经设计的太复杂了，既然是文件系统，不用非仿作kv,直接改为文件系统，应用随便拼吧
+ * 有时候我们总是把简单的事情搞复杂，上面注释留作纪念吧，曾经设计的太复杂了，既然是文件系统，不用非仿作kv,直接改为文件系统，应用随便拼吧
  */
 public class FileStrStore {
     private static Charset fileCharset = Charset.forName("utf-8");
 
     public static void setValue(String storePath, String value) {
         try {
-            FileUtils.writeStringToFile(new File(storePath), value, Charset.forName("utf-8"));
+            Files.writeString(Path.of(storePath), value, StandardCharsets.UTF_8);
+//            FileUtils.writeStringToFile(new File(storePath), value, Charset.forName("utf-8"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -102,7 +106,13 @@ public class FileStrStore {
     }
 
     protected static String readFileToStr(String filePath) {
-        return readFileToStr(new File(filePath));
+//        return readFileToStr(new File(filePath));
+        try {
+            return Files.readString(Path.of(filePath), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
