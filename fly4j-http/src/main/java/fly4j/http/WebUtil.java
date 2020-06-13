@@ -1,8 +1,7 @@
 package fly4j.http;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,8 +16,8 @@ import java.net.URLDecoder;
  *
  * @author xxgw
  */
+@Slf4j
 public class WebUtil {
-    private static final Log log = LogFactory.getLog(WebUtil.class);
 
     public static PrintWriter getPrintWriter(HttpServletResponse resp) {
         PrintWriter writer = null;

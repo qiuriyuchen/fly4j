@@ -1,7 +1,8 @@
 package fly4j.common;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 线程池
@@ -9,7 +10,7 @@ import org.apache.commons.logging.LogFactory;
  */
 @FunctionalInterface
 public interface EatExcetionRunable extends Runnable {
-    Log log = LogFactory.getLog(EatExcetionRunable.class);
+    static Logger log = LoggerFactory.getLogger(EatExcetionRunable.class);
 
     @Override
     default void run() {

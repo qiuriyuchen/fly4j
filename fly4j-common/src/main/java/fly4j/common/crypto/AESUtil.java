@@ -1,8 +1,7 @@
 package fly4j.common.crypto;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.CharEncoding;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -13,8 +12,8 @@ import java.security.SecureRandom;
 /**
  * @author guanpanpan
  */
+@Slf4j
 final public class AESUtil {
-    private final static Log log = LogFactory.getLog(AESUtil.class);
 
     private AESUtil() {
 

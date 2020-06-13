@@ -3,9 +3,8 @@ package fly4j.common;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,8 +12,8 @@ import java.util.HashMap;
 /**
  * Created by guanpanpan on 2015/7/24.
  */
+@Slf4j
 public class JsonUtils {
-    private static final Log log = LogFactory.getLog(JsonUtils.class);
     public static final String DATEFORMAT = "yyyy-MM-dd HH:mm:ss";
     public static ObjectMapper objectMapper = new ObjectMapper();
 

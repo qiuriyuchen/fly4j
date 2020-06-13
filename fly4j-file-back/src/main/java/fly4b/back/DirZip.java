@@ -4,11 +4,10 @@ import fly4b.back.zip.Zip4jTool;
 import fly4j.common.JsonUtils;
 import fly4j.common.StringConst;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -21,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 @Setter
+@Slf4j
 public class DirZip {
-    public static final Log log = LogFactory.getLog(DirZip.class);
     protected FileFilter noNeedBackFileFilter;
     protected List<ZipConfig> zipConfigs = new ArrayList<>();
     private DirCompare dirCompare;
