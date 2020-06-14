@@ -5,6 +5,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -317,10 +318,10 @@ public class FileUtil {
     private static void testFilePath() {
         //测试路径
         StringBuilder msg = new StringBuilder();
-        msg.append("System.getProperty(\"user.dir\")").append(":").append(System.getProperty("user.dir")).append(StringConst.N_N);
-        msg.append(" System.getProperty(\"java.class.path\")").append(":").append(System.getProperty("java.class.path")).append(StringConst.N_N);
+        msg.append("System.getProperty(\"user.dir\")").append(":").append(System.getProperty("user.dir")).append(StringUtils.LF);
+        msg.append(" System.getProperty(\"java.class.path\")").append(":").append(System.getProperty("java.class.path")).append(StringUtils.LF);
         //不可以在jar包使用
-        msg.append("this.getClass().getResource(\"/\").getPath()").append(":").append(FileUtil.class.getResource("/").getPath()).append(StringConst.N_N);
+        msg.append("this.getClass().getResource(\"/\").getPath()").append(":").append(FileUtil.class.getResource("/").getPath()).append(StringUtils.LF);
         System.out.println(msg);
     }
 
