@@ -1,7 +1,7 @@
 package fly4j.http;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -73,7 +73,7 @@ final public class CookiesUtil {
      */
     public static void clearCookie(HttpServletRequest request, HttpServletResponse response, String cookieName) {
         var domain = WebUtil.getDomain(request);
-        if (org.apache.commons.lang.StringUtils.isEmpty(cookieName)) {
+        if (StringUtils.isEmpty(cookieName)) {
             return;
         }
 

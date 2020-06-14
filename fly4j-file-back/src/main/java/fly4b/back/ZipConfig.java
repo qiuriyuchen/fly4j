@@ -3,7 +3,7 @@ package fly4b.back;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fly4j.common.os.OsUtil;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.text.DateFormat;

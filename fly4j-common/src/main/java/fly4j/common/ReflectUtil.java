@@ -1,6 +1,7 @@
 package fly4j.common;
 
-import org.apache.commons.lang.StringUtils;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
 

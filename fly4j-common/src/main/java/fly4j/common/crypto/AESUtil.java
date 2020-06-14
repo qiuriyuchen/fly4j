@@ -1,7 +1,7 @@
 package fly4j.common.crypto;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.CharEncoding;
+import org.apache.commons.codec.CharEncoding;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
