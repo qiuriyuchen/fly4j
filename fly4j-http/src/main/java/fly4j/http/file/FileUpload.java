@@ -17,22 +17,22 @@ public class FileUpload {
 
     public static String uploadFile(HttpServletRequest request, String currPath, long sizeMaxM) throws Exception {
         //如果不是文件上传，则返回
-        boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+        var isMultipart = ServletFileUpload.isMultipartContent(request);
         if (!isMultipart) {
             return "not file upload";
         }
 
 
         // 图片地址 ，相对于webroot的
-        String relativeWebRootPath = "";
+        var relativeWebRootPath = "";
 
         // 允许上传的文件格式的列表
-        final String[] allpict = new String[]{".jpg", ".zip", ".jpeg", ".gif", ".jpeg", ".png", ".bmp", ".JPG", ".JPGE", ".GIF", ".JPEG", ".PNG",
+        final var allpict = new String[]{".jpg", ".zip", ".jpeg", ".gif", ".jpeg", ".png", ".bmp", ".JPG", ".JPGE", ".GIF", ".JPEG", ".PNG",
                 ".BMP"};
 
-        DiskFileItemFactory factory = new DiskFileItemFactory();
+        var factory = new DiskFileItemFactory();
         // 设置临时目录：
-        String tempPath = request.getSession().getServletContext().getRealPath("/temp");
+        var tempPath = request.getSession().getServletContext().getRealPath("/temp");
         factory.setRepository(new File(tempPath));
         // 设置缓冲区大小，这里是40M
         factory.setSizeThreshold(41943040);
@@ -44,7 +44,7 @@ public class FileUpload {
         List<FileItem> fileList = upload.parseRequest(request);
 
 
-        for (FileItem fileItem : fileList) {
+        for (var fileItem : fileList) {
             if (fileItem.isFormField()) {//如果是表单域，就不是文件上传
                 continue;
             }
@@ -55,13 +55,13 @@ public class FileUpload {
                 continue;
             }
 
-            String fileTypeName = getFileType(allpict, fileName);
+            var fileTypeName = getFileType(allpict, fileName);
             // 图片路径
-            String picPath = "iknowData" + fileTypeName;
+            var picPath = "iknowData" + fileTypeName;
 
             // 返回文件名，以时间为名，路径：e:/temp
-            String savePath = currPath + "/" + fileName;
-            File file = new File(savePath);
+            var savePath = currPath + "/" + fileName;
+            var file = new File(savePath);
             //返回相对路径
             relativeWebRootPath = "pic/" + picPath;
 //            if (!file.getParentFile().isDirectory()) {

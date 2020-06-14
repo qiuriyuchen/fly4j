@@ -31,7 +31,7 @@ final public class CookiesUtil {
      * @return
      */
     public static String getCookieValueDecode(HttpServletRequest request, String cookieName) {
-        String cookieValue = getCookieValue(request, cookieName);
+        var cookieValue = getCookieValue(request, cookieName);
         if (StringUtils.isBlank(cookieValue)) {
             return cookieValue;
         }
@@ -52,10 +52,10 @@ final public class CookiesUtil {
      * @return
      */
     public static String getCookieValue(HttpServletRequest request, String cookieName) {
-        Cookie[] cookies = request.getCookies();
+        var cookies = request.getCookies();
         if (cookies == null)
             return null;
-        for (Cookie c : cookies) {
+        for (var c : cookies) {
             if (c.getName().equals(cookieName)) {
                 return c.getValue();
             }
@@ -72,14 +72,14 @@ final public class CookiesUtil {
      * @param response
      */
     public static void clearCookie(HttpServletRequest request, HttpServletResponse response, String cookieName) {
-        String domain = WebUtil.getDomain(request);
+        var domain = WebUtil.getDomain(request);
         if (org.apache.commons.lang.StringUtils.isEmpty(cookieName)) {
             return;
         }
 
-        Cookie[] cookies = request.getCookies();
+        var cookies = request.getCookies();
         if (cookies != null && cookies.length > 0) {
-            for (Cookie cookie : cookies) {
+            for (var cookie : cookies) {
                 if (cookie.getName().equals(cookieName)) {
                     cookie.setMaxAge(0);
                     cookie.setValue(null);

@@ -1,5 +1,6 @@
 package fly4j.frame.spring;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
@@ -7,12 +8,13 @@ import org.springframework.context.ApplicationContextAware;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author guanpanpan
  */
+@Slf4j
 public class SpringContextHolder implements ApplicationContextAware {
-    private static final Log log = LogFactory.getLog(SpringContextHolder.class);
     private static ApplicationContext applicationContext;
 
     public void setApplicationContext(ApplicationContext applicationContext) {
@@ -29,9 +31,8 @@ public class SpringContextHolder implements ApplicationContextAware {
      */
     public static ApplicationContext getApplicationContextWithSleep() {
         while (applicationContext == null) {
-            log.debug("getApplicationContextWithSleep:" + 1000);
             try {
-                Thread.sleep(1000);
+                TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -50,9 +51,9 @@ public class SpringContextHolder implements ApplicationContextAware {
         return (T) getApplicationContext().getBean(beanName);
     }
 
-    public static  <T> List<T> getBeans(String filterNames) {
+    public static <T> List<T> getBeans(String filterNames) {
         List<T> filterList = new ArrayList<>();
-        for (String filterName : filterNames.split(",")) {
+        for (var filterName : filterNames.split(",")) {
             T filter = SpringContextHolder.getBean(filterName);
             filterList.add(filter);
         }
