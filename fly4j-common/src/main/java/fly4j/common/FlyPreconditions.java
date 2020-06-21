@@ -6,25 +6,28 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Objects;
 
 public class FlyPreconditions {
-    public static <T> T checkNotNull(T reference, String errorMsg) {
-        Objects.requireNonNull(reference, errorMsg);
-        if (reference instanceof String) {
-            if (StringUtils.isBlank((String) reference)) {
-                throw new IllegalArgumentException(errorMsg);
+    public static <T> T requireNotEmpty(T obj, String message) {
+        if (obj == null) {
+            throw new NullPointerException(message);
+        }
+        if (obj instanceof String) {
+            if (StringUtils.isBlank((String) obj)) {
+                throw new IllegalArgumentException(message);
             }
         }
-        return reference;
+        return obj;
     }
 
-    public static <T> T checkNotNull(T reference) {
-        Objects.requireNonNull(reference);
-        if (reference instanceof String) {
-            if (StringUtils.isBlank((String) reference)) {
+    public static <T> T requireNotEmpty(T obj) {
+        if (obj == null) {
+            throw new NullPointerException();
+        }
+        if (obj instanceof String) {
+            if (StringUtils.isBlank((String) obj)) {
                 throw new IllegalArgumentException();
             }
-
         }
-        return reference;
+        return obj;
     }
 
     public static void checkArgumentFalse(boolean expression, String errorMsg) {
