@@ -24,11 +24,10 @@ import java.util.List;
 @Slf4j
 public class DirZip {
     protected FileFilter noNeedBackFileFilter;
-    protected List<ZipConfig> zipConfigs = new ArrayList<>();
     private DirCompare dirCompare;
     private long afterCopySleppTime = 0;
 
-    public String executeCheck() throws Exception {
+    public String executeCheck(List<ZipConfig> zipConfigs) throws Exception {
         StringBuilder builder = new StringBuilder();
         for (ZipConfig zipConfig : zipConfigs) {
             builder.append(dirCompare.check(zipConfig.getBeZipSourceDir(), 1)).append(StringUtils.LF);
@@ -36,7 +35,11 @@ public class DirZip {
         return builder.toString();
     }
 
-    public String excuteBack() throws IOException, ZipException {
+    public String excuteBack(ZipConfig zipConfig) throws IOException, ZipException {
+        return excuteBack(List.of(zipConfig));
+    }
+
+    public String excuteBack(List<ZipConfig> zipConfigs) throws IOException, ZipException {
         var builder = new StringBuilder();
 
 

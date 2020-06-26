@@ -23,56 +23,55 @@ public class FileUtil {
     public static final String gbk = "gbk";
 
 
-    public static boolean delFile4Safe(String fileStr) {
-        File f = new File(fileStr);
-        if ((f.isDirectory() && f.listFiles().length == 0) || !f.isDirectory()) {
-            f.delete();
-            return true;
-        } else {
+//    public static boolean delFile4Safe(Path fileStr) {
+//        File f = fileStr.toFile();
+//        if ((f.isDirectory() && f.listFiles().length == 0) || !f.isDirectory()) {
+//            f.delete();
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
-            return false;
-        }
-    }
+//    public static boolean delFile(String fileStr) {
+//        File file = new File(fileStr);
+//
+//        if (file.isFile() && file.exists())
+//            return file.delete();
+//        else
+//            return false;
+//    }
 
-    public static boolean delFile(String fileStr) {
-        File file = new File(fileStr);
+//    public static void delDir(String fileStr) {
+//        File file = new File(fileStr);
+//
+//        if (file.isDirectory() && file.exists()) {
+//            try {
+//                FileUtils.forceDelete(file);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
-        if (file.isFile() && file.exists())
-            return file.delete();
-        else
-            return false;
-    }
+//    public static void safeDelete(File deleteFile) throws IOException {
+//        FileUtils.deleteDirectory(deleteFile);
+//        if (deleteFile.exists()) {
+//            throw new RuntimeException("safeDelete error");
+//        }
+//    }
 
-    public static void delDir(String fileStr) {
-        File file = new File(fileStr);
-
-        if (file.isDirectory() && file.exists()) {
-            try {
-                FileUtils.forceDelete(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void safeDelete(File deleteFile) throws IOException {
-        FileUtils.deleteDirectory(deleteFile);
-        if (deleteFile.exists()) {
-            throw new RuntimeException("safeDelete error");
-        }
-    }
-
-    public static void createFile(String fileStr) {
-        File file = new File(fileStr);
-        if (!file.exists())
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                System.out.println("fileStr:" + fileStr + e.getMessage());
-                e.printStackTrace();
-            }
-
-    }
+//    public static void createFile(String fileStr) {
+//        File file = new File(fileStr);
+//        if (!file.exists())
+//            try {
+//                file.createNewFile();
+//            } catch (IOException e) {
+//                System.out.println("fileStr:" + fileStr + e.getMessage());
+//                e.printStackTrace();
+//            }
+//
+//    }
 
     public static boolean isImg(String fileStr) {
         try {
@@ -91,15 +90,15 @@ public class FileUtil {
         }
     }
 
-    public static Collection<File> listDirFiles(String dirStr) {
-        File file = new File(dirStr);
-        if (!file.isDirectory()) {
-            return new ArrayList<File>();
-        }
-
-        Collection<File> files = FileUtils.listFiles(file, null, false);
-        return files;
-    }
+//    public static Collection<File> listDirFiles(String dirStr) {
+//        File file = new File(dirStr);
+//        if (!file.isDirectory()) {
+//            return new ArrayList<File>();
+//        }
+//
+//        Collection<File> files = FileUtils.listFiles(file, null, false);
+//        return files;
+//    }
 
     /**
      * 根据文件名字后缀匹配文件列表
@@ -118,120 +117,120 @@ public class FileUtil {
                 name.endsWith(endStr));
     }
 
-    public static void forceMkdir(String dirStr) {
-        try {
-            FileUtils.forceMkdir(new File(dirStr));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public static void forceMkdir(Path dirStr) {
+//        try {
+//            FileUtils.forceMkdir(dirStr.toFile());
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
-    public static boolean exists(String dirStr) {
-        return new File(dirStr).exists();
-    }
+//    public static boolean exists(Path dirStr) {
+//        return dirStr.toFile().exists();
+//    }
 
-    public static String getFileStr(String filePath, String charSet, String br) {
-        StringBuilder stringBuilder = new StringBuilder();
-        List<String> list = FileUtil.getStrsListFromFile(filePath, charSet);
-        for (String str : list) {
-            stringBuilder.append(str).append(br);
-        }
-        return stringBuilder.toString();
+//    public static String getFileStr(String filePath, String charSet, String br) {
+//        StringBuilder stringBuilder = new StringBuilder();
+//        List<String> list = FileUtil.getStrsListFromFile(filePath, charSet);
+//        for (String str : list) {
+//            stringBuilder.append(str).append(br);
+//        }
+//        return stringBuilder.toString();
+//
+//    }
 
-    }
+//    /**
+//     * 读取文件内容，去除空行
+//     *
+//     * @param filePath
+//     * @return
+//     */
+//    public static List<String> getStrsListFromFile(String filePath, String charSet) {
+//        List<String> list = new ArrayList<String>();
+//        try {
+//            InputStreamReader isr = new InputStreamReader(new FileInputStream(filePath), charSet);
+//            BufferedReader br = new BufferedReader(isr);
+//
+//            String strLine = null;
+//            while ((strLine = br.readLine()) != null) {
+//                list.add(strLine.trim());
+//            }
+//            br.close();
+//            isr.close();
+//
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//        return list;
+//    }
 
-    /**
-     * 读取文件内容，去除空行
-     *
-     * @param filePath
-     * @return
-     */
-    public static List<String> getStrsListFromFile(String filePath, String charSet) {
-        List<String> list = new ArrayList<String>();
-        try {
-            InputStreamReader isr = new InputStreamReader(new FileInputStream(filePath), charSet);
-            BufferedReader br = new BufferedReader(isr);
+//    /**
+//     * 读取文件内容
+//     *
+//     * @param filePath
+//     * @return
+//     */
+//    public static Set<String> getStrsSetFromFile(String filePath) {
+//        Set<String> set = new HashSet<String>();
+//        try {
+//            InputStreamReader isr = new InputStreamReader(new FileInputStream(filePath), "utf-8");
+//            BufferedReader br = new BufferedReader(isr);
+//
+//            String strLine = null;
+//            while ((strLine = br.readLine()) != null) {
+//                set.add(strLine);
+//            }
+//            br.close();
+//            isr.close();
+//
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//        return set;
+//    }
 
-            String strLine = null;
-            while ((strLine = br.readLine()) != null) {
-                list.add(strLine.trim());
-            }
-            br.close();
-            isr.close();
+//    public static void WriteStrToFile(String fileStr, List<String> list) {
+//
+//        StringBuilder stringBuilder = new StringBuilder();
+//        for (String str : list) {
+//            stringBuilder.append(str).append("\r\n");
+//        }
+//        WriteStrToFile(fileStr, stringBuilder.toString());
+//    }
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return list;
-    }
+//    public static void WriteStrToFile(String fileStr, String str) {
+//        File file = new File(fileStr);
+//        if (str == null || str.trim().equals("")) {
+//            return;
+//        }
+//
+//        try {
+//            OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file), "utf-8");
+//            BufferedWriter bw = new BufferedWriter(osw);
+//            bw.write(str);
+//            bw.close();
+//            osw.close();
+//
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    }
 
-    /**
-     * 读取文件内容
-     *
-     * @param filePath
-     * @return
-     */
-    public static Set<String> getStrsSetFromFile(String filePath) {
-        Set<String> set = new HashSet<String>();
-        try {
-            InputStreamReader isr = new InputStreamReader(new FileInputStream(filePath), "utf-8");
-            BufferedReader br = new BufferedReader(isr);
-
-            String strLine = null;
-            while ((strLine = br.readLine()) != null) {
-                set.add(strLine);
-            }
-            br.close();
-            isr.close();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return set;
-    }
-
-    public static void WriteStrToFile(String fileStr, List<String> list) {
-
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String str : list) {
-            stringBuilder.append(str).append("\r\n");
-        }
-        WriteStrToFile(fileStr, stringBuilder.toString());
-    }
-
-    public static void WriteStrToFile(String fileStr, String str) {
-        File file = new File(fileStr);
-        if (str == null || str.trim().equals("")) {
-            return;
-        }
-
-        try {
-            OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file), "utf-8");
-            BufferedWriter bw = new BufferedWriter(osw);
-            bw.write(str);
-            bw.close();
-            osw.close();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public static void WriteStrToFileBlank(String fileStr) {
-        File file = new File(fileStr);
-
-
-        try {
-            OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file), "utf-8");
-            BufferedWriter bw = new BufferedWriter(osw);
-            bw.write("");
-            bw.close();
-            osw.close();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+//    public static void WriteStrToFileBlank(String fileStr) {
+//        File file = new File(fileStr);
+//
+//
+//        try {
+//            OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file), "utf-8");
+//            BufferedWriter bw = new BufferedWriter(osw);
+//            bw.write("");
+//            bw.close();
+//            osw.close();
+//
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    }
 
     public static String getMd5ByFile(FileInputStream fis) throws Exception {
         String md5 = DigestUtils.md5Hex(IOUtils.toByteArray(fis));
