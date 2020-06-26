@@ -24,25 +24,25 @@ import java.util.List;
 public class FileStrStore {
     private static Charset fileCharset = Charset.forName("utf-8");
 
-    public static void setValue(String storePath, String value) {
+
+    public static void setValue(Path storePath, String value) {
         try {
-            FileUtils.writeStringToFile(new File(storePath), value,StandardCharsets.UTF_8);
+            FileUtils.writeStringToFile(storePath.toFile(), value, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-
-    public static void setObject(String storePath, Object value) {
+    public static void setObject(Path storePath, Object value) {
         setValue(storePath, JsonUtils.writeValueAsString(value));
     }
 
-    public static String getValue(String storePath) {
+    public static String getValue(Path storePath) {
         return readFileToStr(storePath);
     }
 
 
-    public static <T> T getObject(String storePath, Class<T> cls) {
+    public static <T> T getObject(Path storePath, Class<T> cls) {
         String json = getValue(storePath);
         return JsonUtils.readValue(json, cls);
     }
@@ -54,7 +54,14 @@ public class FileStrStore {
             file.delete();
     }
 
-    public static List<String> getValues(String parentPath, String keyPre) {
+    public static void delete(Path storePath) {
+        File file = storePath.toFile();
+
+        if (file.isFile() && file.exists())
+            file.delete();
+    }
+
+    public static List<String> getValues(Path parentPath, String keyPre) {
         List<String> values = new ArrayList<>();
         Collection<File> files = listDirFiles(parentPath);
         for (File file : files) {
@@ -81,7 +88,7 @@ public class FileStrStore {
         }
     }
 
-    public static List<String> getChildFileNames(String storePath, String keyPre) {
+    public static List<String> getChildFileNames(Path storePath, String keyPre) {
         List<String> values = new ArrayList<>();
         Collection<File> files = listDirFiles(storePath);
         for (File file : files) {
@@ -95,8 +102,8 @@ public class FileStrStore {
         return values;
     }
 
-    private static Collection<File> listDirFiles(String dirStr) {
-        File file = new File(dirStr);
+    private static Collection<File> listDirFiles(Path dirStr) {
+        File file = dirStr.toFile();
         if (!file.isDirectory()) {
             return new ArrayList<File>();
         }
@@ -105,8 +112,8 @@ public class FileStrStore {
         return files;
     }
 
-    protected static String readFileToStr(String filePath) {
-        return readFileToStr(new File(filePath));
+    protected static String readFileToStr(Path filePath) {
+        return readFileToStr(filePath.toFile());
     }
 
 
