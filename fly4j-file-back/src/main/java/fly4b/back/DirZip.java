@@ -4,6 +4,7 @@ import fly4b.back.zip.Zip4jTool;
 import fly4j.common.JsonUtils;
 import fly4j.common.StringConst;
 import fly4j.common.pesistence.file.FileStrStore;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 @Setter
+@Getter
 @Slf4j
 public class DirZip {
     protected FileFilter noNeedBackFileFilter;
