@@ -105,7 +105,7 @@ public class DirCompareImpl implements DirCompare {
                     if ("size".equals(genType)) {
                         md5Map.put(key, "" + file.length());
                     } else {
-                        md5Map.put(key, getMD5(file));
+                        md5Map.put(key, FileUtil.getMD5(file));
                     }
 
                 }
@@ -123,35 +123,6 @@ public class DirCompareImpl implements DirCompare {
         return FileUtil.getRelativeStandardPath(file.getAbsolutePath(), baseDir);
     }
 
-    /**
-     * 获取一个文件的md5值(可处理大文件)
-     *
-     * @return md5 value
-     */
-    private String getMD5(File file) {
-        FileInputStream fileInputStream = null;
-        try {
-            MessageDigest MD5 = MessageDigest.getInstance("MD5");
-            fileInputStream = new FileInputStream(file);
-            byte[] buffer = new byte[8192];
-            int length;
-            while ((length = fileInputStream.read(buffer)) != -1) {
-                MD5.update(buffer, 0, length);
-            }
-            return new String(Hex.encodeHex(MD5.digest()));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            try {
-                if (fileInputStream != null) {
-                    fileInputStream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     /**
      * 求一个字符串的md5值
@@ -225,7 +196,8 @@ public class DirCompareImpl implements DirCompare {
     }
 
     private List<File> getSortMd5Files(Path checkDir) {
-        File[] filesArray = FileUtil.listFilesWithEndStr(Path.of(checkDir.toString(), ".flyMd5"), ".md5");
+        var checkDirFile = Path.of(checkDir.toString(), ".flyMd5").toFile();
+        File[] filesArray = checkDirFile.listFiles(((dir, name) -> name.endsWith(".md5")));
         if (null == filesArray) {
             return null;
         }

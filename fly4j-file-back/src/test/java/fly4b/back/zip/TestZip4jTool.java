@@ -2,6 +2,7 @@ package fly4b.back.zip;
 
 
 import fly4j.common.file.FileUtil;
+import fly4j.common.pesistence.file.FileStrStore;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -15,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 
 /**
  * @author guanpanpan
@@ -29,11 +31,11 @@ public class TestZip4jTool {
 
     @Test
     public void testZip() throws Exception {
-        String path = "/export/testflyzip/";
+        Path path = Path.of("/export/testflyzip/");
         File dir = new File("/export/testflyzip/");
 
         if (dir.exists()) {
-            FileUtil.delDir(path);
+            FileUtils.forceDelete(path.toFile());
 //            dir.delete();
         }
         //解决问题思路不止是直接解决，比如不放心是否删除了，可以加判断，并没有直接研究为什么 dir.delete();没有删除；当然有时间要看下，其实是因为cleanDirectory
@@ -45,10 +47,10 @@ public class TestZip4jTool {
         Zip4jTool.zip("/export/testflyzip/test.zip", getTestFileFromResources("testDir").getAbsolutePath(), "123");
 
         Zip4jTool.unZip("/export/testflyzip/test.zip", "/export/testflyzip/", "123");
-        Assert.assertEquals("a中国", FileUtils.readFileToString(new File(path + "testDir/a.txt"), Charset.forName("utf-8")));
-        Assert.assertEquals("b中国", FileUtils.readFileToString(new File(path + "testDir/b.txt"), Charset.forName("utf-8")));
-        Assert.assertEquals("aa中国", FileUtils.readFileToString(new File(path + "testDir/childDir/aa.txt"), Charset.forName("utf-8")));
-        Assert.assertEquals("bb中国", FileUtils.readFileToString(new File(path + "testDir/childDir/bb.txt"), Charset.forName("utf-8")));
+        Assert.assertEquals("a中国", FileStrStore.getValue(Path.of(path + "testDir/a.txt")));
+        Assert.assertEquals("b中国", FileStrStore.getValue(Path.of(path + "testDir/b.txt")));
+        Assert.assertEquals("aa中国", FileStrStore.getValue(Path.of(path + "testDir/childDir/aa.txt")));
+        Assert.assertEquals("bb中国", FileStrStore.getValue(Path.of(path + "testDir/childDir/bb.txt")));
         System.out.println("end");
     }
 

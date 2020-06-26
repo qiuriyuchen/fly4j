@@ -31,7 +31,7 @@ public class FileInfo {
     public FileInfo(File file) {
         //绝对路径
         this.absolutePath = file.getAbsolutePath();
-        this.pic = FileUtil.isImg(file.getPath());
+        this.pic = FileUtil.isImg(file);
         //相对路径
         String absolutePathLinux = file.getAbsolutePath().replaceAll(
                 "\\\\", "/");

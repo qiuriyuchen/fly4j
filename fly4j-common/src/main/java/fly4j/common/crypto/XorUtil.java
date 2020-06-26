@@ -4,6 +4,7 @@ import fly4j.common.test.TestData;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
+import java.nio.file.Path;
 
 /**
  * 图片工具
@@ -13,17 +14,17 @@ public class XorUtil {
 
 
     public static void main(String[] args) throws Exception {
-        encryptFile(FilenameUtils.concat(TestData.tSourceDir, "xorSource.txt"), FilenameUtils.concat(TestData.tTargetDir, "xorTarget.fbk"), 123);
-        decryptFile(FilenameUtils.concat(TestData.tTargetDir, "xorTarget.fbk"), FilenameUtils.concat(TestData.tTargetDir, "xorResote.txt"), 123);
+        encryptFile(Path.of(TestData.tSourceDir, "xorSource.txt"), Path.of(TestData.tTargetDir, "xorTarget.fbk"), 123);
+        decryptFile(Path.of(TestData.tTargetDir, "xorTarget.fbk"), Path.of(TestData.tTargetDir, "xorResote.txt"), 123);
     }
 
 
-    public static void encryptFile(String sourceFileUrl, String targetFileUrl, int pass) {
+    public static void encryptFile(Path sourceFileUrl, Path targetFileUrl, int pass) {
         FileInputStream in = null;
         FileOutputStream out = null;
         try {
-            in = new FileInputStream(sourceFileUrl);
-            out = new FileOutputStream(targetFileUrl);
+            in = new FileInputStream(sourceFileUrl.toFile());
+            out = new FileOutputStream(targetFileUrl.toFile());
             int data = 0;
             while ((data = in.read()) != -1) {
                 //将读取到的字节异或上一个数，加密输出
@@ -50,12 +51,12 @@ public class XorUtil {
         }
     }
 
-    public static void decryptFile(String sourceFileUrl, String targetFileUrl, int pass) {
+    public static void decryptFile(Path sourceFileUrl, Path targetFileUrl, int pass) {
         FileInputStream in = null;
         FileOutputStream out = null;
         try {
-            in = new FileInputStream(sourceFileUrl);
-            out = new FileOutputStream(targetFileUrl);
+            in = new FileInputStream(sourceFileUrl.toFile());
+            out = new FileOutputStream(targetFileUrl.toFile());
             int data = 0;
             while ((data = in.read()) != -1) {
                 //将读取到的字节异或上一个数，加密输出
