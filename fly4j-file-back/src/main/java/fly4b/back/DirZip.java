@@ -3,11 +3,13 @@ package fly4b.back;
 import fly4b.back.zip.Zip4jTool;
 import fly4j.common.JsonUtils;
 import fly4j.common.StringConst;
+import fly4j.common.pesistence.file.FileStrStore;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -30,13 +32,13 @@ public class DirZip {
     public String executeCheck() throws Exception {
         StringBuilder builder = new StringBuilder();
         for (ZipConfig zipConfig : zipConfigs) {
-            builder.append(dirCompare.check(zipConfig.getBeZipSourceDir(), 1)).append(StringConst.N_N);
+            builder.append(dirCompare.check(zipConfig.getBeZipSourceDir(), 1)).append(StringUtils.LF);
         }
         return builder.toString();
     }
 
     public String excuteBack() throws IOException, ZipException {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
 
 
 //        // 删除过期zip文件
@@ -56,11 +58,11 @@ public class DirZip {
         //在要备份的文件夹生成Md5文件 gen md5File for back dirs
         zipConfigs.forEach(zipConfig -> {
             try {
-                Map<String, String> md5Map = dirCompare.getDirMd5Map(zipConfig.getBeZipSourceDir());
-                String md5FilePath = getMd5FilePath(zipConfig);
-                FileUtils.writeStringToFile(new File(md5FilePath), JsonUtils.writeValueAsString(md5Map), Charset.forName("utf-8"));
-                dirCompare.deleteMoreMd5Files(zipConfig.getBeZipSourceDir());
-
+                var md5Map = dirCompare.getDirMd5Map(zipConfig.getBeZipSourceDir());
+                var md5StoreJson = JsonUtils.writeValueAsString(md5Map);
+                var md5StorePath = getMd5FilePath(zipConfig);
+                FileStrStore.setValue(md5StorePath, md5StoreJson);
+                dirCompare.deleteMoreMd5Files(zipConfig.getBeZipSourceDir(), 3);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -121,9 +123,9 @@ public class DirZip {
             } catch (ZipException e) {
                 e.printStackTrace();
                 log.error("Zip4jTool.zip destZip:" + zipConfig.getLastDestZipFullPath() + " srcFile:" + zipConfig.getBeZipSourceDir(), e);
-                builder.append(zipConfig.getLastDestZipFullPath()).append(" error ").append(e.getMessage()).append(StringConst.N_N);
+                builder.append(zipConfig.getLastDestZipFullPath()).append(" error ").append(e.getMessage()).append(StringUtils.LF);
             }
-            builder.append(zipConfig.getLastDestZipFullPath()).append(" ziped").append(StringConst.N_N);
+            builder.append(zipConfig.getLastDestZipFullPath()).append(" ziped").append(StringUtils.LF);
         }
 
         //

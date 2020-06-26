@@ -26,7 +26,7 @@ public class FileStrStore {
 
     public static void setValue(String storePath, String value) {
         try {
-            FileUtils.writeStringToFile(new File(storePath), value, Charset.forName("utf-8"));
+            FileUtils.writeStringToFile(new File(storePath), value,StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

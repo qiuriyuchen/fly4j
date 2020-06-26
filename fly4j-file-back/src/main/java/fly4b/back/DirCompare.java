@@ -10,5 +10,5 @@ public interface DirCompare {
 
     String check(String checkDir, int checkMd5Count);
 
-    void deleteMoreMd5Files(String beZipSourceDir);
+    void deleteMoreMd5Files(String beZipSourceDir, int maxCount);
 }

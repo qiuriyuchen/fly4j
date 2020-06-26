@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.util.*;
 
@@ -222,15 +223,15 @@ public class DirCompareImpl implements DirCompare {
         }
     }
 
-    public List<File> getSortMd5Files(String checkDir) {
-        File[] filesArray = FileUtil.listFilesWithEndStr(FilenameUtils.concat(checkDir, ".flyMd5"), ".md5");
+    private List<File> getSortMd5Files(String checkDir) {
+        File[] filesArray = FileUtil.listFilesWithEndStr(Path.of(checkDir, ".flyMd5"), ".md5");
         if (null == filesArray) {
             return null;
         }
         List<File> md5Files = Arrays.asList(filesArray);
         Collections.sort(md5Files, (f1, f2) -> {
-            long t1 = Long.valueOf(f1.getName().replaceAll("md5", "").replaceAll("\\.", ""));
-            long t2 = Long.valueOf(f2.getName().replaceAll("md5", "").replaceAll("\\.", ""));
+            long t1 = f1.lastModified();
+            long t2 = f2.lastModified();
             Long c = t2 - t1;
             return c.intValue();
         });
@@ -238,11 +239,11 @@ public class DirCompareImpl implements DirCompare {
     }
 
     @Override
-    public void deleteMoreMd5Files(String beZipSourceDir) {
+    public void deleteMoreMd5Files(String beZipSourceDir, int maxCount) {
         //删除多余的Md5文件 deleteMore md5
-        List<File> md5Files = getSortMd5Files(beZipSourceDir);
-        if (md5Files.size() > 3) {
-            for (int i = 2; i < md5Files.size(); i++) {
+        var md5Files = getSortMd5Files(beZipSourceDir);
+        if (md5Files.size() > maxCount) {
+            for (var i = maxCount - 1; i < md5Files.size(); i++) {
                 md5Files.get(i).delete();
             }
         }

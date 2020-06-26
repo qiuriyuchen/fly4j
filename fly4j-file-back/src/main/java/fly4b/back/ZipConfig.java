@@ -12,6 +12,8 @@ import java.util.Date;
 
 /**
  * eg: /export/mecode/* --> /export/back/**.zip
+ * dir:以/结尾的文件夹
+ * path：文件路径
  */
 public class ZipConfig {
     /**

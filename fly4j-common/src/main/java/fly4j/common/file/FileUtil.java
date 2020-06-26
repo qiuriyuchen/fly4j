@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.Path;
 import java.util.*;
 
 /**
@@ -106,6 +107,13 @@ public class FileUtil {
     public static File[] listFilesWithEndStr(final String sourceFilePath,
                                              final String endStr) {
         File file = new File(sourceFilePath);
+        return file.listFiles((dir, name) ->
+                name.endsWith(endStr));
+    }
+
+    public static File[] listFilesWithEndStr(final Path sourceFilePath,
+                                             final String endStr) {
+        File file = sourceFilePath.toFile();
         return file.listFiles((dir, name) ->
                 name.endsWith(endStr));
     }
