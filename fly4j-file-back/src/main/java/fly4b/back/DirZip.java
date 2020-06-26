@@ -23,7 +23,7 @@ public class DirZip {
     private DirCompare dirCompare;
     private long afterCopySleppTime = 0;
 
-    public String excuteBack(ZipConfig zipConfig) {
+    public String excuteBack(ZipConfig zipConfig, Path zipFilePath) {
         var builder = new StringBuilder();
         try {
             //生成MD5摘要文件
@@ -56,7 +56,7 @@ public class DirZip {
                 }
             }
             //执行备份 backFile
-            Zip4jTool.zip(zipConfig.genDestZipFullPath().toFile(), zipConfig.getTargetBackDirPath().toFile(), zipConfig.getPassword());
+            Zip4jTool.zip(zipFilePath.toFile(), zipConfig.getTargetBackDirPath().toFile(), zipConfig.getPassword());
             builder.append("Zip4jTool.zip  srcFile:" + zipConfig.getBeZipSourceDir()).append(" ziped").append(StringUtils.LF);
             StringConst.appendLine(builder, "back end");
         } catch (Exception e) {
