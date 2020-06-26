@@ -14,12 +14,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Setter
 @Slf4j
@@ -55,7 +53,7 @@ public class DirZip {
 //        }
 
 
-        //在要备份的文件夹生成Md5文件 gen md5File for back dirs
+        //生成MD5摘要文件
         zipConfigs.forEach(zipConfig -> {
             try {
                 var md5Map = dirCompare.getDirMd5Map(zipConfig.getBeZipSourceDir());
@@ -69,9 +67,9 @@ public class DirZip {
         });
 
         //删除上次备份文件 delete last backFile
-        for (ZipConfig zipConfig : zipConfigs) {
-            File[] files = new File(zipConfig.getZipToDirPath()).listFiles();
-            for (File file : files) {
+        for (var zipConfig : zipConfigs) {
+            var files = new File(zipConfig.getZipToDir()).listFiles();
+            for (var file : files) {
                 if (file.isDirectory()) {
                     //上次拷贝过来的文件
                     FileUtils.deleteDirectory(file);
@@ -81,8 +79,9 @@ public class DirZip {
                         if (zipConfig.isDelZip()) {
                             FileUtils.forceDelete(file);
                             System.out.println("deleteBefore" + file.getAbsolutePath());
+                        } else {
+                            //do not delete zip
                         }
-
                     } else {
                         FileUtils.forceDelete(file);
                         System.out.println("deleteBefore" + file.getAbsolutePath());
@@ -94,18 +93,15 @@ public class DirZip {
         }
 
 
-        //删除上次拷贝过去的备份文件，并拷贝到临时目录
+        //拷贝文件
         for (ZipConfig zipConfig : zipConfigs) {
-            FileUtils.forceMkdir(new File(zipConfig.getTargetBackDir()));
-            FileUtils.copyDirectory(new File(zipConfig.getBeZipSourceDir()), new File(zipConfig.getTargetBackDir()));
-            System.out.println("copy " + zipConfig.getBeZipSourceDir() + " ---> " + zipConfig.getTargetBackDir());
+            var targetBackDirFile = zipConfig.getTargetBackDirPath().toFile();
+            FileUtils.forceMkdir(targetBackDirFile);
+            FileUtils.copyDirectory(new File(zipConfig.getBeZipSourceDir()), targetBackDirFile);
+            System.out.println("copy " + zipConfig.getBeZipSourceDir() + " ---> " + zipConfig.getTargetBackDirPath());
+            //删除不需要备份的文件 delete no need back files,eg:target .git etc.
+            this.deleteNoNeedBackFloder(targetBackDirFile);
         }
-
-
-        //删除不需要备份的文件 delete no need back files,eg:target .git etc.
-        zipConfigs.forEach(zipConfig -> {
-            this.deleteNoNeedBackFloder(new File(zipConfig.getTargetBackDir()));
-        });
         System.out.println("TargetFileDel end");
         //休息等临时文件消失
         if (afterCopySleppTime > 0) {
@@ -119,13 +115,13 @@ public class DirZip {
         for (ZipConfig zipConfig : zipConfigs) {
             DateFormat df = new SimpleDateFormat("yy-MM-dd_HH");
             try {
-                Zip4jTool.zip(zipConfig.genDestZipFullPath(), zipConfig.getTargetBackDir(), zipConfig.getPassword());
+                Zip4jTool.zip(zipConfig.genDestZipFullPath().toFile(), zipConfig.getTargetBackDirPath().toFile(), zipConfig.getPassword());
             } catch (ZipException e) {
                 e.printStackTrace();
-                log.error("Zip4jTool.zip destZip:" + zipConfig.getLastDestZipFullPath() + " srcFile:" + zipConfig.getBeZipSourceDir(), e);
-                builder.append(zipConfig.getLastDestZipFullPath()).append(" error ").append(e.getMessage()).append(StringUtils.LF);
+                log.error("Zip4jTool.zip  srcFile:" + zipConfig.getBeZipSourceDir(), e);
+                builder.append("Zip4jTool.zip  srcFile:" + zipConfig.getBeZipSourceDir()).append(" error ").append(e.getMessage()).append(StringUtils.LF);
             }
-            builder.append(zipConfig.getLastDestZipFullPath()).append(" ziped").append(StringUtils.LF);
+            builder.append("Zip4jTool.zip  srcFile:" + zipConfig.getBeZipSourceDir()).append(" ziped").append(StringUtils.LF);
         }
 
         //

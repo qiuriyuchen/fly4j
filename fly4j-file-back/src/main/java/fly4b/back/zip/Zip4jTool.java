@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 
 /**
  * 使用zip4j
@@ -26,6 +27,11 @@ public class Zip4jTool {
      * @throws ZipException 异常
      */
     public static void zip(String destZip, String srcFile, String passwd) throws ZipException {
+        zip(new File(destZip), new File(srcFile), passwd);
+    }
+
+
+    public static void zip(File destZipFile, File srcfile, String passwd) throws ZipException {
         if (StringUtils.isBlank(passwd)) {
             throw new RuntimeException("password is empty");
         }
@@ -37,14 +43,13 @@ public class Zip4jTool {
         parameters.setEncryptFiles(true);
         parameters.setEncryptionMethod(EncryptionMethod.ZIP_STANDARD);
 
-        File parentF = new File(destZip).getParentFile();
+        File parentF = destZipFile.getParentFile();
         if (!parentF.exists())
             parentF.mkdir();
 
-        ZipFile zipfile = new ZipFile(destZip, passwd.toCharArray());
+        ZipFile zipfile = new ZipFile(destZipFile, passwd.toCharArray());
 //        zipfile.setFileNameCharset("UTF-8");//在GBK系统中需要设置
 
-        File srcfile = new File(srcFile);
 
         if (srcfile.isDirectory()) {
             zipfile.addFolder(srcfile, parameters);
@@ -52,6 +57,7 @@ public class Zip4jTool {
             zipfile.addFile(srcfile, parameters);
         }
     }
+
 
     /**
      * 解压

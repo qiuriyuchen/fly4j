@@ -2,10 +2,13 @@ package fly4b.back;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fly4j.common.os.OsUtil;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,6 +18,8 @@ import java.util.Date;
  * dir:以/结尾的文件夹
  * path：文件路径
  */
+@Data
+@NoArgsConstructor
 public class ZipConfig {
     /**
      * eg /export/mecode/
@@ -23,17 +28,13 @@ public class ZipConfig {
     /**
      * eg  /export/back/
      */
-    private String zipToDirPath;
+    private String zipToDir;
     private String password;
     private boolean delZip = true;
-    private String lastDestZipFullPath;
 
-    public ZipConfig() {
-    }
-
-    public ZipConfig(String beZipSourceDir, String zipToDirPath, String password) {
+    public ZipConfig(String beZipSourceDir, String zipToDir, String password) {
         this.beZipSourceDir = beZipSourceDir;
-        this.zipToDirPath = zipToDirPath;
+        this.zipToDir = zipToDir;
         this.password = password;
     }
 
@@ -43,8 +44,6 @@ public class ZipConfig {
      */
     @JsonIgnore
     private String getBackDirName() {
-
-
 //            不可识别.开头文件
         String dirName = FilenameUtils.getBaseName(this.getBeZipSourceDir());
         return StringUtils.isNotBlank(dirName) ? dirName :
@@ -64,78 +63,32 @@ public class ZipConfig {
      * eg  /export/back/mecode/
      */
     @JsonIgnore
-    public String getTargetBackDir() {
-        return FilenameUtils.concat(getZipToDirPath(), getBackDirName()) + File.separator;
+    public Path getTargetBackDirPath() {
+        return Path.of(getZipToDir(), getBackDirName());
     }
 
     @JsonIgnore
     public String getTargetMiDir() {
-        return FilenameUtils.concat(getZipToDirPath(), getBackDirName() + "mi") + File.separator;
+        return FilenameUtils.concat(getZipToDir(), getBackDirName() + "mi") + File.separator;
     }
 
     @JsonIgnore
-    public String genDestZipFullPath() {
-        if (StringUtils.isNotBlank(this.lastDestZipFullPath)) {
-            return this.lastDestZipFullPath;
-        }
+    public Path genDestZipFullPath() {
         DateFormat df = new SimpleDateFormat("yy-MM-dd_HH");
         String fileName = OsUtil.getSimpleOsName() + df.format(new Date()) + this.getBackDirName().replace('.', '_') + ".zip";
-        this.lastDestZipFullPath = FilenameUtils.concat(this.getZipToDirPath(), fileName);
-        return this.lastDestZipFullPath;
+        return Path.of(this.getZipToDir(), fileName);
     }
 
     @JsonIgnore
-    public String genDestZipFullPath(String aliasDirName) {
+    public Path genDestZipFullPath(String aliasDirName) {
         DateFormat df = new SimpleDateFormat("yy-MM-dd_HH");
         String fileName = OsUtil.getSimpleOsName() + df.format(new Date()) + aliasDirName.replace('.', '_') + ".zip";
-        this.lastDestZipFullPath = FilenameUtils.concat(this.getZipToDirPath(), fileName);
-        return this.lastDestZipFullPath;
-    }
-
-    @JsonIgnore
-    public String getLastDestZipFullPath() {
-        return lastDestZipFullPath;
+        return Path.of(this.getZipToDir(), fileName);
     }
 
     @JsonIgnore
     public int getPasswordInt() {
         return Integer.parseInt(password);
-    }
-
-    /**
-     * ***********     seter and geter      ************
-     */
-
-    public String getBeZipSourceDir() {
-        return beZipSourceDir;
-    }
-
-    public void setBeZipSourceDir(String beZipSourceDir) {
-        this.beZipSourceDir = beZipSourceDir;
-    }
-
-    public String getZipToDirPath() {
-        return zipToDirPath;
-    }
-
-    public void setZipToDirPath(String zipToDirPath) {
-        this.zipToDirPath = zipToDirPath;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setDelZip(boolean delZip) {
-        this.delZip = delZip;
-    }
-
-    public boolean isDelZip() {
-        return delZip;
     }
 
 
