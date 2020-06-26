@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class DirZip {
 
         //删除上次备份文件 delete last backFile
         for (var zipConfig : zipConfigs) {
-            var files = new File(zipConfig.getZipToDir()).listFiles();
+            var files = zipConfig.getZipToDir().toFile().listFiles();
             for (var file : files) {
                 if (file.isDirectory()) {
                     //上次拷贝过来的文件
@@ -97,7 +98,7 @@ public class DirZip {
         for (ZipConfig zipConfig : zipConfigs) {
             var targetBackDirFile = zipConfig.getTargetBackDirPath().toFile();
             FileUtils.forceMkdir(targetBackDirFile);
-            FileUtils.copyDirectory(new File(zipConfig.getBeZipSourceDir()), targetBackDirFile);
+            FileUtils.copyDirectory(zipConfig.getBeZipSourceDir().toFile(), targetBackDirFile);
             System.out.println("copy " + zipConfig.getBeZipSourceDir() + " ---> " + zipConfig.getTargetBackDirPath());
             //删除不需要备份的文件 delete no need back files,eg:target .git etc.
             this.deleteNoNeedBackFloder(targetBackDirFile);
@@ -134,12 +135,12 @@ public class DirZip {
         return builder.toString();
     }
 
-    private String getMd5FilePath(ZipConfig zipConfig) {
-        File dirFile = new File(zipConfig.getMd5DirName());
+    private Path getMd5FilePath(ZipConfig zipConfig) {
+        File dirFile = zipConfig.getMd5DirName().toFile();
         if (!dirFile.exists()) {
             dirFile.mkdir();
         }
-        return zipConfig.getMd5DirName() + "/md5" + System.currentTimeMillis() + ".md5";
+        return Path.of(zipConfig.getMd5DirName() + "/md5" + System.currentTimeMillis() + ".md5");
     }
 
 

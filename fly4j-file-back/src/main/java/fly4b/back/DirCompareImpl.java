@@ -26,7 +26,7 @@ public class DirCompareImpl implements DirCompare {
     private boolean checkEmptyDir = true;
 
     @Override
-    public DirCompareResult compar(List<String> compDirs) {
+    public DirCompareResult compar(List<Path> compDirs) {
         DirCompareResult result = new DirCompareResult();
         TrackContext.reset();
         int same = 0;
@@ -34,7 +34,7 @@ public class DirCompareImpl implements DirCompare {
         //得到文件夹的Md5Map
         Set<String> allKeys = new HashSet<>();
         List<Map<String, String>> allMap = new ArrayList<>();
-        for (String compDir : compDirs) {
+        for (var compDir : compDirs) {
             TrackContext.appendTrackInfo("comp dir:" + compDir);
             Map<String, String> md5Map = this.getDirMd5Map(compDir);
             allMap.add(md5Map);
@@ -71,13 +71,14 @@ public class DirCompareImpl implements DirCompare {
         return result;
     }
 
-    public Map<String, String> getDirMd5Map(String checkDir) {
+    @Override
+    public Map<String, String> getDirMd5Map(Path checkDir) {
         Map<String, String> md5Map = new LinkedHashMap<>();
-        getMd5FileStr(new File(checkDir), md5Map, checkDir);
+        getMd5FileStr(checkDir.toFile(), md5Map, checkDir);
         return md5Map;
     }
 
-    public void getMd5FileStr(File dirFile, Map<String, String> md5Map, String baseDir) {
+    public void getMd5FileStr(File dirFile, Map<String, String> md5Map, Path baseDir) {
         try {
             File[] files = dirFile.listFiles();
             //如果不是空文件夹，把父亲文件夹加入
@@ -118,7 +119,7 @@ public class DirCompareImpl implements DirCompare {
 
     }
 
-    public String getKey(File file, String baseDir) {
+    public String getKey(File file, Path baseDir) {
         return FileUtil.getRelativeStandardPath(file.getAbsolutePath(), baseDir);
     }
 
@@ -167,7 +168,7 @@ public class DirCompareImpl implements DirCompare {
     }
 
     @Override
-    public String check(String checkDir, int checkMd5Count) {
+    public String check(Path checkDir, int checkMd5Count) {
         final StringBuilder stringBuilder = new StringBuilder();
         StringConst.appendLine(stringBuilder, "check:" + checkDir);
         List<File> md5Files = getSortMd5Files(checkDir);
@@ -193,7 +194,7 @@ public class DirCompareImpl implements DirCompare {
 
     }
 
-    private void checkSingleFile(String checkDir, File md5File, StringBuilder stringBuilder) throws Exception {
+    private void checkSingleFile(Path checkDir, File md5File, StringBuilder stringBuilder) throws Exception {
         //取得上次的md5
         String historyMd5Str = FileUtils.readFileToString(md5File, Charset.forName("utf-8"));
         HashMap<String, String> historyMd5MapRead = JsonUtils.readStringStringHashMap(historyMd5Str);
@@ -223,8 +224,8 @@ public class DirCompareImpl implements DirCompare {
         }
     }
 
-    private List<File> getSortMd5Files(String checkDir) {
-        File[] filesArray = FileUtil.listFilesWithEndStr(Path.of(checkDir, ".flyMd5"), ".md5");
+    private List<File> getSortMd5Files(Path checkDir) {
+        File[] filesArray = FileUtil.listFilesWithEndStr(Path.of(checkDir.toString(), ".flyMd5"), ".md5");
         if (null == filesArray) {
             return null;
         }
@@ -239,7 +240,7 @@ public class DirCompareImpl implements DirCompare {
     }
 
     @Override
-    public void deleteMoreMd5Files(String beZipSourceDir, int maxCount) {
+    public void deleteMoreMd5Files(Path beZipSourceDir, int maxCount) {
         //删除多余的Md5文件 deleteMore md5
         var md5Files = getSortMd5Files(beZipSourceDir);
         if (md5Files.size() > maxCount) {

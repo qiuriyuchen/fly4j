@@ -1,14 +1,15 @@
 package fly4b.back;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
 public interface DirCompare {
-    DirCompareResult compar(List<String> compDirs);
+    DirCompareResult compar(List<Path> compDirs);
 
-    Map<String, String> getDirMd5Map(String checkDir);
+    Map<String, String> getDirMd5Map(Path checkDir);
 
-    String check(String checkDir, int checkMd5Count);
+    String check(Path checkDir, int checkMd5Count);
 
-    void deleteMoreMd5Files(String beZipSourceDir, int maxCount);
+    void deleteMoreMd5Files(Path beZipSourceDir, int maxCount);
 }

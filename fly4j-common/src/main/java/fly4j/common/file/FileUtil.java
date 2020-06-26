@@ -239,10 +239,10 @@ public class FileUtil {
         return md5;
     }
 
-    public static String getRelativeStandardPath(String absolutePath, String baseDir) {
+    public static String getRelativeStandardPath(String absolutePath, Path baseDir) {
         String key = FilenameUtils.normalize(absolutePath);
         key = FilenameUtils.separatorsToUnix(key);
-        String baseDirTemp = FilenameUtils.normalize(baseDir);
+        String baseDirTemp = FilenameUtils.normalize(baseDir.toString());
         baseDirTemp = FilenameUtils.separatorsToUnix(baseDirTemp);
         key = key.replaceAll(baseDirTemp, "");
         return key;

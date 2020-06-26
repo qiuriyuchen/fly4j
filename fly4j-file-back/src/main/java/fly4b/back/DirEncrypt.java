@@ -11,6 +11,7 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,7 +24,7 @@ public class DirEncrypt {
     public Map<String, String> encrypt(String srcDirUrl, String targetDirUrl, int pass) {
         String baseDir = new File(srcDirUrl).getAbsolutePath() + File.separator;
         Map<String, String> fileNameMap = new HashMap<>();
-        innnerEncrypt(new File(srcDirUrl), targetDirUrl, baseDir, pass, fileNameMap, new AtomicInteger(0));
+        innnerEncrypt(new File(srcDirUrl), targetDirUrl, Path.of(baseDir), pass, fileNameMap, new AtomicInteger(0));
         try {
             FileUtils.writeStringToFile(new File(FilenameUtils.concat(targetDirUrl, "index.fbkindex")), JsonUtils.writeValueAsString(fileNameMap), Charset.forName("utf-8"));
         } catch (IOException e) {
@@ -33,7 +34,7 @@ public class DirEncrypt {
     }
 
 
-    private void innnerEncrypt(File srcDir, String targetDirUrl, String baseDir, int pass, Map<String, String> fileNameMap, AtomicInteger index) {
+    private void innnerEncrypt(File srcDir, String targetDirUrl, Path baseDir, int pass, Map<String, String> fileNameMap, AtomicInteger index) {
         try {
             File[] files = srcDir.listFiles();
 
