@@ -78,8 +78,8 @@ public class TestZip4jTool {
         DirZip dirZip = new DirZip();
         dirZip.setDirCompare(dirCompare);
         ZipConfig zipConfig = new ZipConfig()
-                .setBeZipSourceDir(FileUtil.getClassPathFile("/test-files/testDir").toPath())
-                .setDestZipFilePath(Path.of(testPathStr, "test.zip"))
+                .setBeZipSourceDir(FileUtil.getClassPathFile("/test-files/testDir").toPath().toFile())
+                .setDestZipFile(Path.of(testPathStr, "test.zip").toFile())
                 .setPassword("123");
         FlyResult flyResult = dirZip.excuteBack(zipConfig);
         Assert.assertTrue(flyResult.isSuccess());

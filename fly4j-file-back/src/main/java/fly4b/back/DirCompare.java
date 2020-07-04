@@ -14,5 +14,5 @@ public interface DirCompare {
 
     FlyResult checkWithHistory(File checkDir);
 
-    void deleteMoreMd5Files(Path beZipSourceDir, int maxCount);
+    void deleteMoreMd5Files(File beZipSourceDir, int maxCount);
 }

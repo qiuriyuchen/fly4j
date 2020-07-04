@@ -135,7 +135,7 @@ public class DirCompareImpl implements DirCompare {
     public FlyResult checkWithHistory(File checkDir) {
         final StringBuilder stringBuilder = new StringBuilder();
         StringConst.appendLine(stringBuilder, "check:" + checkDir);
-        List<File> md5Files = getSortMd5Files(checkDir.toPath());
+        List<File> md5Files = getSortMd5Files(checkDir);
         if (null == md5Files || md5Files.size() == 0) {
             stringBuilder.append(" not have history file");
             return new FlyResult(true, stringBuilder.toString());
@@ -176,8 +176,8 @@ public class DirCompareImpl implements DirCompare {
     }
 
 
-    private List<File> getSortMd5Files(Path checkDir) {
-        var checkDirFile = Path.of(checkDir.toString(), ".flyMd5").toFile();
+    private List<File> getSortMd5Files(File checkDir) {
+        var checkDirFile = Path.of(checkDir.getAbsolutePath(), ".flyMd5").toFile();
         File[] filesArray = checkDirFile.listFiles(((dir, name) -> name.endsWith(".md5")));
         if (null == filesArray) {
             return null;
@@ -193,7 +193,7 @@ public class DirCompareImpl implements DirCompare {
     }
 
     @Override
-    public void deleteMoreMd5Files(Path beZipSourceDir, int maxCount) {
+    public void deleteMoreMd5Files(File beZipSourceDir, int maxCount) {
         //删除多余的Md5文件 deleteMore md5
         var md5Files = getSortMd5Files(beZipSourceDir);
         if (md5Files.size() > maxCount) {

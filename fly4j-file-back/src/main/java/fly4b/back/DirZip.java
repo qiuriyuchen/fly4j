@@ -30,22 +30,22 @@ public class DirZip {
         try {
             //生成MD5摘要文件
             dirCompare.deleteMoreMd5Files(zipConfig.getBeZipSourceDir(), 3);
-            var md5Map = dirCompare.getDirMd5Map(zipConfig.getBeZipSourceDir().toFile());
+            var md5Map = dirCompare.getDirMd5Map(zipConfig.getBeZipSourceDir());
             var md5StoreJson = JsonUtils.writeValueAsString(md5Map);
-            var md5StorePath = zipConfig.getMd5FilePath();
+            var md5StorePath = zipConfig.getSourceMd5File().toPath();
             FileStrStore.setValue(md5StorePath, md5StoreJson);
 
             //执行备份 backFile
-            Zip4jTool.zipDir(zipConfig.getDestZipFilePath().toFile(), zipConfig.getBeZipSourceDir().toFile(), zipConfig.getPassword());
+            Zip4jTool.zipDir(zipConfig.getDestZipFile(), zipConfig.getBeZipSourceDir(), zipConfig.getPassword());
             builder.append("Zip4jTool.zip  srcFile:" + zipConfig.getBeZipSourceDir()).append(" ziped").append(StringUtils.LF);
 
             //执行Test
             if (afterTest) {
-                var unzipName = "unzipT4" + zipConfig.getDestZipFilePath().getFileName().toString().replaceAll("\\.", "_");
-                var testPathStr = Path.of(zipConfig.getDestZipFilePath().getParent().toString(), unzipName);
+                var unzipName = "unzipT4" + zipConfig.getDestZipFile().getName().replaceAll("\\.", "_");
+                var testPathStr = Path.of(zipConfig.getDestZipFile().getParent(), unzipName);
                 FileUtils.forceMkdir(testPathStr.toFile());
-                Zip4jTool.unZip(zipConfig.getDestZipFilePath().toString(), testPathStr.toString(), "123");
-                var checkPath = Path.of(testPathStr.toString(), zipConfig.getBeZipSourceDir().getFileName().toString());
+                Zip4jTool.unZip(zipConfig.getDestZipFile().toString(), testPathStr.toString(), "123");
+                var checkPath = Path.of(testPathStr.toString(), zipConfig.getBeZipSourceDir().getName());
                 log.error("checkPath:" + checkPath.toFile().getAbsolutePath());
                 FlyResult result = dirCompare.checkWithHistory(checkPath.toFile());
                 if (result.isSuccess()) {
