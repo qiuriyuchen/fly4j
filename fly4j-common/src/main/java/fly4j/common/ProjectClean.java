@@ -13,7 +13,7 @@ import java.util.Date;
 public class ProjectClean {
     public static void main(String[] args) throws Exception {
         System.out.println("start:"+ DateUtil.getCurrDateStr());
-        String backPath = "D:\\MOST-CURRENT\\CODES-back-"+DateUtil.getDateStrForName(new Date());
+        String backPath = "D:\\MOST-CURRENT\\CODES-back-"+DateUtil.getDateStr4Name(new Date());
         String srcPath = "D:\\MOST-CURRENT\\CODES";
         FileUtils.deleteDirectory(new File(backPath));
         FileUtils.copyDirectory(new File(srcPath), new File(backPath));

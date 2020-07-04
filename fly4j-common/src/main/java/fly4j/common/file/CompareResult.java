@@ -53,7 +53,7 @@ public class CompareResult {
 
     public String toHtml() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("run:").append(run).append("  ").append(DateUtil.format(startDate)).append("<br/>");
+        stringBuilder.append("run:").append(run).append("  ").append(DateUtil.getDateStr(startDate)).append("<br/>");
         if (isSame()) {
             stringBuilder.append("<span style=\"color:green\">OK</span>").append("<br/>");
         } else {

@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.util.*;
@@ -69,13 +71,10 @@ public class FileUtil {
         }
     }
 
-    public static String getRelativeStandardPath(String absolutePath, Path baseDir) {
-        String key = FilenameUtils.normalize(absolutePath);
-        key = FilenameUtils.separatorsToUnix(key);
-        String baseDirTemp = FilenameUtils.normalize(baseDir.toString());
-        baseDirTemp = FilenameUtils.separatorsToUnix(baseDirTemp);
-        key = key.replaceAll(baseDirTemp, "");
-        return key;
+    public static String getSubPathUnix(File file, File baseDirFile) {
+        var fileAbsolutePath = FilenameUtils.separatorsToUnix(file.getAbsolutePath());
+        var baseDirAbsolutePath = FilenameUtils.separatorsToUnix(baseDirFile.getAbsolutePath());
+        return fileAbsolutePath.replace(baseDirAbsolutePath, "");
     }
 
 
@@ -117,6 +116,15 @@ public class FileUtil {
             return (file.canWrite() && file.renameTo(new File(newAbsolutePath)));
         }
         return false;
+    }
+
+    public static File getClassPathFile(String path) {
+        try {
+            String fullPath = FileUtil.class.getResource(path).getFile();
+            return new File(fullPath);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

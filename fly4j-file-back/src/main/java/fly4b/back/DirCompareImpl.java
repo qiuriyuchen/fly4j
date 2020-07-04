@@ -1,32 +1,30 @@
 package fly4b.back;
 
 import fly4j.common.DateUtil;
+import fly4j.common.FlyResult;
 import fly4j.common.JsonUtils;
 import fly4j.common.StringConst;
 import fly4j.common.file.FileAndDirFilter;
 import fly4j.common.file.FileUtil;
 import fly4j.common.track.TrackContext;
-import org.apache.commons.codec.binary.Hex;
+import lombok.Setter;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
-import java.security.MessageDigest;
 import java.util.*;
 
 public class DirCompareImpl implements DirCompare {
     //md5 or size
     public static String genType = "size";
+    @Setter
     private FileAndDirFilter noNeedCalMd5FileFilter;
     private boolean checkEmptyDir = true;
 
     @Override
-    public DirCompareResult compar(List<Path> compDirs) {
+    public DirCompareResult compareMulDir(List<File> compDirs) {
         DirCompareResult result = new DirCompareResult();
         TrackContext.reset();
         int same = 0;
@@ -72,26 +70,28 @@ public class DirCompareImpl implements DirCompare {
     }
 
     @Override
-    public Map<String, String> getDirMd5Map(Path checkDir) {
+    public Map<String, String> getDirMd5Map(File checkDir) {
         Map<String, String> md5Map = new LinkedHashMap<>();
-        getMd5FileStr(checkDir.toFile(), md5Map, checkDir);
+        getMd5FileStr(checkDir, md5Map, checkDir);
         return md5Map;
     }
 
-    public void getMd5FileStr(File dirFile, Map<String, String> md5Map, Path baseDir) {
+    private void getMd5FileStr(File dirFile, Map<String, String> md5Map, File baseDir) {
         try {
             File[] files = dirFile.listFiles();
+            var dirKey = FileUtil.getSubPathUnix(dirFile, baseDir);
             //如果不是空文件夹，把父亲文件夹加入
             if (checkEmptyDir) {
-                md5Map.put(getKey(dirFile, baseDir), "dir");
+                md5Map.put(dirKey, "dir");
             } else {
                 if (files.length > 0) {
-                    md5Map.put(getKey(dirFile, baseDir), "dir");
+                    md5Map.put(dirKey, "dir");
                 }
             }
 
             for (File file : files) {
-                if (noNeedCalMd5FileFilter.accept(file)) {
+
+                if (null != noNeedCalMd5FileFilter && noNeedCalMd5FileFilter.accept(file)) {
                     continue;
                 }
                 if (file.isDirectory()) {
@@ -100,7 +100,7 @@ public class DirCompareImpl implements DirCompare {
                 } else {
                     //生成md5
 
-                    String key = getKey(file, baseDir);
+                    String key = FileUtil.getSubPathUnix(file, baseDir);
 
                     if ("size".equals(genType)) {
                         md5Map.put(key, "" + file.length());
@@ -119,10 +119,6 @@ public class DirCompareImpl implements DirCompare {
 
     }
 
-    public String getKey(File file, Path baseDir) {
-        return FileUtil.getRelativeStandardPath(file.getAbsolutePath(), baseDir);
-    }
-
 
     /**
      * 求一个字符串的md5值
@@ -134,66 +130,51 @@ public class DirCompareImpl implements DirCompare {
         return DigestUtils.md5Hex(target);
     }
 
-    public void setNoNeedCalMd5FileFilter(FileAndDirFilter noNeedCalMd5FileFilter) {
-        this.noNeedCalMd5FileFilter = noNeedCalMd5FileFilter;
-    }
 
     @Override
-    public String check(Path checkDir, int checkMd5Count) {
+    public FlyResult checkWithHistory(File checkDir) {
         final StringBuilder stringBuilder = new StringBuilder();
         StringConst.appendLine(stringBuilder, "check:" + checkDir);
-        List<File> md5Files = getSortMd5Files(checkDir);
-        if (null == md5Files) {
+        List<File> md5Files = getSortMd5Files(checkDir.toPath());
+        if (null == md5Files || md5Files.size() == 0) {
             stringBuilder.append(" not have history file");
-            return stringBuilder.toString();
+            return new FlyResult(true, stringBuilder.toString());
         }
-        if (checkMd5Count > md5Files.size()) {
-            checkMd5Count = md5Files.size();
-        }
-        for (int index = 0; index < checkMd5Count; index++) {
-            File md5File = md5Files.get(index);
-            try {
-                long md5Time = Long.valueOf(md5File.getName().replaceAll("md5", "").replaceAll("\\.", ""));
-                StringConst.appendLine(stringBuilder, "....current file compare to history:" + DateUtil.getDateStr(new Date(md5Time)));
 
-                checkSingleFile(checkDir, md5File, stringBuilder);
-            } catch (Exception e) {
-                StringConst.appendLine(stringBuilder, "Exception:" + e.getMessage());
-            }
+        FlyResult flyResult = new FlyResult().success();
+        File md5File = md5Files.get(0);
+        try {
+            StringConst.appendLine(stringBuilder, "....current file compare to history:" + DateUtil.getDateStr(new Date(md5File.lastModified())));
+            //取得上次的md5
+            String historyMd5Str = FileUtils.readFileToString(md5File, Charset.forName("utf-8"));
+            HashMap<String, String> historyMd5MapRead = JsonUtils.readStringStringHashMap(historyMd5Str);
+            //取得文件夹的Md5
+            Map<String, String> currentMd5Map = this.getDirMd5Map(checkDir);
+            historyMd5MapRead.forEach((oKey, oValue) -> {
+                String md5New = currentMd5Map.get(oKey);
+                if (null == md5New) {
+                    flyResult.fail();
+                    StringConst.appendLine(stringBuilder, "........delete:" + oKey);
+                } else if (md5New.equals(oValue)) {
+
+                } else {
+                    flyResult.fail();
+                    StringConst.appendLine(stringBuilder, "........diff:" + oKey);
+                }
+            });
+            currentMd5Map.forEach((cKey, cValue) -> {
+                String md5History = historyMd5MapRead.get(cKey);
+                if (null == md5History) {
+                    StringConst.appendLine(stringBuilder, "........add:" + cKey);
+                }
+            });
+        } catch (Exception e) {
+            StringConst.appendLine(stringBuilder, "Exception:" + e.getMessage());
         }
-        return stringBuilder.toString();
+        return flyResult.setMsg(stringBuilder.toString());
 
     }
 
-    private void checkSingleFile(Path checkDir, File md5File, StringBuilder stringBuilder) throws Exception {
-        //取得上次的md5
-        String historyMd5Str = FileUtils.readFileToString(md5File, Charset.forName("utf-8"));
-        HashMap<String, String> historyMd5MapRead = JsonUtils.readStringStringHashMap(historyMd5Str);
-
-
-        //取得文件夹的Md5
-        Map<String, String> currentMd5Map = this.getDirMd5Map(checkDir);
-//        md5Map.forEach((key, value) -> System.out.println(key));
-        for (Map.Entry readEntry : historyMd5MapRead.entrySet()) {
-            String md5New = currentMd5Map.get(readEntry.getKey());
-            if (null == md5New) {
-                StringConst.appendLine(stringBuilder, "........delete:" + readEntry.getKey());
-            } else if (md5New.equals(readEntry.getValue())) {
-
-            } else {
-                StringConst.appendLine(stringBuilder, "........diff:" + readEntry.getKey());
-            }
-
-        }
-
-        for (Map.Entry readEntry : currentMd5Map.entrySet()) {
-            String md5History = historyMd5MapRead.get(readEntry.getKey());
-            if (null == md5History) {
-                StringConst.appendLine(stringBuilder, "........add:" + readEntry.getKey());
-            }
-
-        }
-    }
 
     private List<File> getSortMd5Files(Path checkDir) {
         var checkDirFile = Path.of(checkDir.toString(), ".flyMd5").toFile();
