@@ -171,7 +171,7 @@ public class DirCompareImpl implements DirCompare {
         } catch (Exception e) {
             StringConst.appendLine(stringBuilder, "Exception:" + e.getMessage());
         }
-        return flyResult.setMsg(stringBuilder.toString());
+        return flyResult.append(stringBuilder.toString());
 
     }
 

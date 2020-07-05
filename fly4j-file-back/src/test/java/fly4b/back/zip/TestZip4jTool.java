@@ -27,7 +27,6 @@ import java.nio.file.Path;
 @RunWith(BlockJUnit4ClassRunner.class)
 public class TestZip4jTool {
     private static final String testPathStr = "/testFly/zip";
-
     @Before
     public void setup() throws Exception {
         File testDir = Path.of("/testFly/zip/").toFile();
@@ -49,7 +48,7 @@ public class TestZip4jTool {
 
         Zip4jTool.zipDir(Path.of(testPathStr, "test.zip").toFile(), FileUtil.getClassPathFile("/test-files/testDir"), "123");
 
-        Zip4jTool.unZip(Path.of(testPathStr, "test.zip").toString(), testPathStr, "123");
+        Zip4jTool.unZip(Path.of(testPathStr, "test.zip").toFile(), new File(testPathStr), "123");
         Assert.assertEquals("a中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/a.txt")));
         Assert.assertEquals("b中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/b.txt")));
         Assert.assertEquals("c中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/c.txt")));
@@ -63,7 +62,7 @@ public class TestZip4jTool {
 
         Zip4jTool.zipDir(Path.of(testPathStr, "test.zip").toFile(), FileUtil.getClassPathFile("/test-files/testDir"), "123");
 
-        Zip4jTool.unZip(Path.of(testPathStr, "test.zip").toString(), testPathStr + "/", "123");
+        Zip4jTool.unZip(Path.of(testPathStr, "test.zip").toFile(), new File(testPathStr+ "/") , "123");
         Assert.assertEquals("a中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/a.txt")));
         Assert.assertEquals("b中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/b.txt")));
         Assert.assertEquals("c中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/c.txt")));
@@ -80,11 +79,11 @@ public class TestZip4jTool {
         ZipConfig zipConfig = new ZipConfig()
                 .setBeZipSourceDir(FileUtil.getClassPathFile("/test-files/testDir").toPath().toFile())
                 .setDestZipFile(Path.of(testPathStr, "test.zip").toFile())
-                .setPassword("123");
+                .setPassword("ab123");
         FlyResult flyResult = dirZip.excuteBack(zipConfig);
         System.out.println(flyResult.getMsg());
         Assert.assertTrue(flyResult.isSuccess());
-        Zip4jTool.unZip(Path.of(testPathStr, "test.zip").toString(), testPathStr + "/", "123");
+        Zip4jTool.unZip(Path.of(testPathStr, "test.zip").toFile(), new File(testPathStr+ "/"), "ab123");
         Assert.assertEquals("a中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/a.txt")));
         Assert.assertEquals("b中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/b.txt")));
         Assert.assertEquals("c中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/c.txt")));
@@ -92,18 +91,6 @@ public class TestZip4jTool {
         Assert.assertEquals("bb中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/childDir/bb.txt")));
         log.error("end");
     }
-//    @Test
-//    public void testZip4() throws Exception {
-//        DirCompare dirCompare = new DirCompareImpl();
-//        DirZip dirZip = new DirZip();
-//        dirZip.setDirCompare(dirCompare);
-//        ZipConfig zipConfig = new ZipConfig()
-//                .setBeZipSourceDir(new File("D:\\aa"))
-//                .setDestZipFile(Path.of("D:\\back\\window2020-07-05_11aa.zip").toFile())
-//                .setPassword("123");
-//        FlyResult flyResult = dirZip.excuteBack(zipConfig);
-//        System.out.println(flyResult.getMsg());
-//    }
     @After
     public void tearDown() throws Exception {
     }

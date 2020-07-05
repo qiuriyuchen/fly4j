@@ -5,11 +5,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FlyResult {
     private boolean success;
-    private String msg;
+    private StringBuilder msg = new StringBuilder();
 
     public FlyResult(boolean success, String msg) {
         this.success = success;
-        this.msg = msg;
+        this.msg.append(msg);
     }
 
     public FlyResult fail() {
@@ -22,16 +22,27 @@ public class FlyResult {
         return this;
     }
 
-    public FlyResult setMsg(String msg) {
-        this.msg = msg;
+    public FlyResult append(String msg) {
+        this.msg.append(msg);
         return this;
+    }
+
+    public void merge(FlyResult flyResult) {
+        if (flyResult.isFail()) {
+            this.fail();
+        }
+        this.msg.append(flyResult.getMsg());
     }
 
     public boolean isSuccess() {
         return success;
     }
 
+    public boolean isFail() {
+        return !success;
+    }
+
     public String getMsg() {
-        return msg;
+        return msg.toString();
     }
 }
