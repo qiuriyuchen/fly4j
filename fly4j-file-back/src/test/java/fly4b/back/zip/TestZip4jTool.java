@@ -89,7 +89,7 @@ public class TestZip4jTool {
         Assert.assertEquals("c中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/c.txt")));
         Assert.assertEquals("aa中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/childDir/aa.txt")));
         Assert.assertEquals("bb中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/childDir/bb.txt")));
-        System.out.println("end");
+        log.error("end");
     }
 
     @After
