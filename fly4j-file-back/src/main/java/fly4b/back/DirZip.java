@@ -12,6 +12,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.nio.file.Path;
+import java.util.concurrent.TimeUnit;
 
 @Setter
 @Getter
@@ -37,28 +38,42 @@ public class DirZip {
 
             //执行备份 backFile
             Zip4jTool.zipDir(zipConfig.getDestZipFile(), zipConfig.getBeZipSourceDir(), zipConfig.getPassword());
-            builder.append("Zip4jTool.zip  srcFile:" + zipConfig.getBeZipSourceDir()).append(" ziped").append(StringUtils.LF);
+            builder.append("excuteBack success srcFile(" + zipConfig.getBeZipSourceDir()).append(") zipe to (")
+                    .append(zipConfig.getDestZipFile().getAbsolutePath()).append(")")
+                    .append(StringUtils.LF);
 
             //执行Test
             if (afterTest) {
+                TimeUnit.SECONDS.sleep(10);
                 var unzipName = "unzipT4" + zipConfig.getDestZipFile().getName().replaceAll("\\.", "_");
                 var testPathStr = Path.of(zipConfig.getDestZipFile().getParent(), unzipName);
                 FileUtils.forceMkdir(testPathStr.toFile());
+                builder.append("begin unzip test zipFile(")
+                        .append(zipConfig.getDestZipFile().getAbsolutePath())
+                        .append(")  to (")
+                        .append(testPathStr.toString())
+                        .append(")")
+                        .append(StringUtils.LF);
                 Zip4jTool.unZip(zipConfig.getDestZipFile().toString(), testPathStr.toString(), "123");
+                builder.append("unzip test zipFile(")
+                        .append(zipConfig.getDestZipFile().getAbsolutePath())
+                        .append(")  to (")
+                        .append(testPathStr.toString())
+                        .append(")")
+                        .append(StringUtils.LF);
                 var checkPath = Path.of(testPathStr.toString(), zipConfig.getBeZipSourceDir().getName());
-                log.error("checkPath:" + checkPath.toFile().getAbsolutePath());
+                builder.append("checkPath:" + checkPath.toFile().getAbsolutePath());
                 FlyResult result = dirCompare.checkWithHistory(checkPath.toFile());
                 if (result.isSuccess()) {
                     builder.append("check ok").append(StringUtils.LF);
-                    log.info(result.getMsg());
                 } else {
                     builder.append("check fail!!!!!!!!!!!!").append(StringUtils.LF);
-                    log.error(result.getMsg());
                     backResult.fail();
                 }
+                builder.append(result.getMsg()).append(StringUtils.LF);
 
             }
-            StringConst.appendLine(builder, "back end");
+            builder.append("back end").append(StringUtils.LF);
         } catch (Exception e) {
             log.error("Zip4jTool.zip  srcFile:" + zipConfig.getBeZipSourceDir(), e);
             builder.append("Zip4jTool.zip  srcFile:" + zipConfig.getBeZipSourceDir()).append(" error ").append(e.getMessage()).append(StringUtils.LF);

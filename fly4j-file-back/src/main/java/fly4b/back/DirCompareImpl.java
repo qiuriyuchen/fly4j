@@ -180,7 +180,7 @@ public class DirCompareImpl implements DirCompare {
         var checkDirFile = Path.of(checkDir.getAbsolutePath(), ".flyMd5").toFile();
         File[] filesArray = checkDirFile.listFiles(((dir, name) -> name.endsWith(".md5")));
         if (null == filesArray) {
-            return null;
+            return List.of();
         }
         List<File> md5Files = Arrays.asList(filesArray);
         Collections.sort(md5Files, (f1, f2) -> {
