@@ -44,10 +44,8 @@ public class DirZip {
 
             //执行Test
             if (afterTest) {
-                TimeUnit.SECONDS.sleep(10);
                 var unzipName = "unzipT4" + zipConfig.getDestZipFile().getName().replaceAll("\\.", "_");
                 var testPathStr = Path.of(zipConfig.getDestZipFile().getParent(), unzipName);
-                FileUtils.forceMkdir(testPathStr.toFile());
                 builder.append("begin unzip test zipFile(")
                         .append(zipConfig.getDestZipFile().getAbsolutePath())
                         .append(")  to (")
