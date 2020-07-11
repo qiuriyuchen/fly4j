@@ -79,7 +79,7 @@ public class DirCompareImpl implements DirCompare {
     private void getMd5FileStr(File dirFile, Map<String, String> md5Map, File baseDir) {
         try {
             File[] files = dirFile.listFiles();
-            var dirKey = FileUtil.getSubPathUnix(dirFile, baseDir);
+            var dirKey = FileUtil.getSubPathUnix(dirFile.toPath(), baseDir.toPath());
             //如果不是空文件夹，把父亲文件夹加入
             if (checkEmptyDir) {
                 md5Map.put(dirKey, "dir");
@@ -100,7 +100,7 @@ public class DirCompareImpl implements DirCompare {
                 } else {
                     //生成md5
 
-                    String key = FileUtil.getSubPathUnix(file, baseDir);
+                    String key = FileUtil.getSubPathUnix(file.toPath(), baseDir.toPath());
 
                     if ("size".equals(genType)) {
                         md5Map.put(key, "" + file.length());

@@ -71,10 +71,14 @@ public class FileUtil {
         }
     }
 
-    public static String getSubPathUnix(File file, File baseDirFile) {
-        var fileAbsolutePath = FilenameUtils.separatorsToUnix(file.getAbsolutePath());
-        var baseDirAbsolutePath = FilenameUtils.separatorsToUnix(baseDirFile.getAbsolutePath());
-        return fileAbsolutePath.replace(baseDirAbsolutePath, "");
+    public static String getSubPathUnix(Path file, Path baseDirFile) {
+        try {
+            var fileAbsolutePath = FilenameUtils.separatorsToUnix(file.toRealPath().toString());
+            var baseDirAbsolutePath = FilenameUtils.separatorsToUnix(baseDirFile.toRealPath().toString());
+            return fileAbsolutePath.replace(baseDirAbsolutePath, "");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

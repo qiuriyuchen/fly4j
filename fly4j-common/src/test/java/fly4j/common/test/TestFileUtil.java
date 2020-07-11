@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * @author guanpanpan
@@ -30,6 +31,17 @@ public class TestFileUtil {
 //        Assert.assertTrue(!new File(FilenameUtils.concat(TestData.tTargetDir, "TestFileUtil")).exists());
 //        FileUtil.forceMkdir(FilenameUtils.concat(TestData.tTargetDir, "TestFileUtil/a/aa/aaa"));
 //        Assert.assertTrue(new File(FilenameUtils.concat(TestData.tTargetDir, "TestFileUtil/a/aa/aaa")).exists());
+    }
+    @Test
+    public void testFileSub() throws Exception {
+        //toRealPath 要求文件必须存在，toAbsolutePath不需要
+        System.out.println(Path.of("/../a.txt"));
+        System.out.println(Path.of("/../a.txt").toAbsolutePath());
+        System.out.println(Path.of("/../a.txt").normalize());
+        System.out.println(new File("/../a.txt").getAbsolutePath());
+        System.out.println(Path.of("D:\\flyNetDik\\admin/../admin\\backData").toRealPath());
+//
+//        System.out.println(Path.of("/../a.txt").toRealPath());
     }
     /**
      * ***************************下边测试部分演示容易出错部分用法***************************
