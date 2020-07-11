@@ -6,9 +6,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +25,11 @@ public class FileStrStore {
 
     public static void setValue(Path storePath, String value) {
         try {
-            FileUtils.writeStringToFile(storePath.toFile(), value, StandardCharsets.UTF_8);
+            if (Files.notExists(storePath.getParent())) {
+                Files.createDirectories(storePath.getParent());
+            }
+            Files.writeString(storePath, value);
+//            FileUtils.writeStringToFile(storePath.toFile(), value, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -82,7 +84,8 @@ public class FileStrStore {
             return null;
         }
         try {
-            return FileUtils.readFileToString(file, fileCharset);
+//            return FileUtils.readFileToString(file, fileCharset);
+            return Files.readString(file.toPath());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
