@@ -8,6 +8,7 @@ import fly4b.back.ZipConfig;
 import fly4j.common.FlyResult;
 import fly4j.common.file.FileUtil;
 import fly4j.common.pesistence.file.FileStrStore;
+import fly4j.common.test.TestData;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -18,7 +19,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author qryc
@@ -26,49 +29,52 @@ import java.nio.file.Path;
 @Slf4j
 @RunWith(BlockJUnit4ClassRunner.class)
 public class TestZip4jTool {
-    private static final String testPathStr = "/testFly/zip";
+    //源文件
+    private Path sourcePath = Path.of(TestData.testPath.toString(), "sourcePath");
+    private Path backPath = Path.of(TestData.testPath.toString(), "back");
+
     @Before
     public void setup() throws Exception {
-        File testDir = Path.of("/testFly/zip/").toFile();
+        if (Files.exists(TestData.testPath))
+            FileUtils.forceDelete(TestData.testPath.toFile());
+        Assert.assertFalse(Files.exists(backPath));
+        Files.createDirectories(backPath);
+        Assert.assertTrue(Files.exists(backPath));
 
-        if (testDir.exists()) {
-            FileUtils.forceDelete(testDir);
-//            dir.delete();
-        }
-        //解决问题思路不止是直接解决，比如不放心是否删除了，可以加判断，并没有直接研究为什么 dir.delete();没有删除；当然有时间要看下，其实是因为cleanDirectory
-        Assert.assertFalse(testDir.exists());
-        FileUtils.forceMkdir(testDir);
-        System.out.println(testDir.getAbsoluteFile());
-        Assert.assertTrue(testDir.exists());
+        //创建测试文件
+        Assert.assertFalse(Files.exists(sourcePath));
+        FileStrStore.setValue(Path.of(sourcePath.toString(), "a.txt"), "a中国");
+        FileStrStore.setValue(Path.of(sourcePath.toString(), "b.txt"), "b中国");
+        FileStrStore.setValue(Path.of(sourcePath.toString(), "c.txt"), "c中国");
+        FileStrStore.setValue(Path.of(sourcePath.toString(), "childDir/aa.txt"), "aa中国");
+        FileStrStore.setValue(Path.of(sourcePath.toString(), "childDir/bb.txt"), "bb中国");
     }
 
     @Test
     public void testZip1() throws Exception {
 
 
-        Zip4jTool.zipDir(Path.of(testPathStr, "test.zip").toFile(), FileUtil.getClassPathFile("/test-files/testDir"), "123");
+        Zip4jTool.zipDir(Path.of(backPath.toString(), "test.zip").toFile(), sourcePath.toFile(), "123");
 
-        Zip4jTool.unZip(Path.of(testPathStr, "test.zip").toFile(), new File(testPathStr), "123");
-        Assert.assertEquals("a中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/a.txt")));
-        Assert.assertEquals("b中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/b.txt")));
-        Assert.assertEquals("c中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/c.txt")));
-        Assert.assertEquals("aa中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/childDir/aa.txt")));
-        Assert.assertEquals("bb中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/childDir/bb.txt")));
-        System.out.println("end");
+        Zip4jTool.unZip(Path.of(backPath.toString(), "test.zip").toFile(), backPath.toFile(), "123");
+        Assert.assertEquals("a中国", FileStrStore.getValue(Path.of(backPath.toString(), "sourcePath/a.txt")));
+        Assert.assertEquals("b中国", FileStrStore.getValue(Path.of(backPath.toString(), "sourcePath/b.txt")));
+        Assert.assertEquals("c中国", FileStrStore.getValue(Path.of(backPath.toString(), "sourcePath/c.txt")));
+        Assert.assertEquals("aa中国", FileStrStore.getValue(Path.of(backPath.toString(), "sourcePath/childDir/aa.txt")));
+        Assert.assertEquals("bb中国", FileStrStore.getValue(Path.of(backPath.toString(), "sourcePath/childDir/bb.txt")));
     }
 
     @Test
     public void testZip2() throws Exception {
 
-        Zip4jTool.zipDir(Path.of(testPathStr, "test.zip").toFile(), FileUtil.getClassPathFile("/test-files/testDir"), "123");
+        Zip4jTool.zipDir(Path.of(backPath.toString(), "test.zip").toFile(), new File(TestData.testPath.toString(), "sourcePath/"), "123");
 
-        Zip4jTool.unZip(Path.of(testPathStr, "test.zip").toFile(), new File(testPathStr+ "/") , "123");
-        Assert.assertEquals("a中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/a.txt")));
-        Assert.assertEquals("b中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/b.txt")));
-        Assert.assertEquals("c中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/c.txt")));
-        Assert.assertEquals("aa中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/childDir/aa.txt")));
-        Assert.assertEquals("bb中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/childDir/bb.txt")));
-        System.out.println("end");
+        Zip4jTool.unZip(Path.of(backPath.toString(), "test.zip").toFile(), backPath.toFile(), "123");
+        Assert.assertEquals("a中国", FileStrStore.getValue(Path.of(backPath.toString(), "sourcePath/a.txt")));
+        Assert.assertEquals("b中国", FileStrStore.getValue(Path.of(backPath.toString(), "sourcePath/b.txt")));
+        Assert.assertEquals("c中国", FileStrStore.getValue(Path.of(backPath.toString(), "sourcePath/c.txt")));
+        Assert.assertEquals("aa中国", FileStrStore.getValue(Path.of(backPath.toString(), "sourcePath/childDir/aa.txt")));
+        Assert.assertEquals("bb中国", FileStrStore.getValue(Path.of(backPath.toString(), "sourcePath/childDir/bb.txt")));
     }
 
     @Test
@@ -77,22 +83,23 @@ public class TestZip4jTool {
         DirZip dirZip = new DirZip();
         dirZip.setDirCompare(dirCompare);
         ZipConfig zipConfig = new ZipConfig()
-                .setBeZipSourceDir(FileUtil.getClassPathFile("/test-files/testDir").toPath().toFile())
-                .setDestZipFile(Path.of(testPathStr, "test.zip").toFile())
+                .setBeZipSourceDir(sourcePath.toFile())
+                .setDestZipFile(Path.of(backPath.toString(), "test.zip").toFile())
                 .setPassword("ab123");
         FlyResult flyResult = dirZip.excuteBack(zipConfig);
         System.out.println(flyResult.getMsg());
         Assert.assertTrue(flyResult.isSuccess());
-        Zip4jTool.unZip(Path.of(testPathStr, "test.zip").toFile(), new File(testPathStr+ "/"), "ab123");
-        Assert.assertEquals("a中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/a.txt")));
-        Assert.assertEquals("b中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/b.txt")));
-        Assert.assertEquals("c中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/c.txt")));
-        Assert.assertEquals("aa中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/childDir/aa.txt")));
-        Assert.assertEquals("bb中国", FileStrStore.getValue(Path.of(testPathStr, "testDir/childDir/bb.txt")));
-        log.error("end");
+        Zip4jTool.unZip(Path.of(backPath.toString(), "test.zip").toFile(), backPath.toFile(), "ab123");
+        Assert.assertEquals("a中国", FileStrStore.getValue(Path.of(backPath.toString(), "sourcePath/a.txt")));
+        Assert.assertEquals("b中国", FileStrStore.getValue(Path.of(backPath.toString(), "sourcePath/b.txt")));
+        Assert.assertEquals("c中国", FileStrStore.getValue(Path.of(backPath.toString(), "sourcePath/c.txt")));
+        Assert.assertEquals("aa中国", FileStrStore.getValue(Path.of(backPath.toString(), "sourcePath/childDir/aa.txt")));
+        Assert.assertEquals("bb中国", FileStrStore.getValue(Path.of(backPath.toString(), "sourcePath/childDir/bb.txt")));
     }
+
     @After
     public void tearDown() throws Exception {
+        FileUtils.forceDeleteOnExit(TestData.testPath.toFile());
     }
 
 
