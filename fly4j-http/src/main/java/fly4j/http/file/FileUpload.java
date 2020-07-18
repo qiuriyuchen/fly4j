@@ -6,6 +6,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -15,7 +16,7 @@ import java.util.List;
 public class FileUpload {
 
 
-    public static String uploadFile(HttpServletRequest request, String currPath, long sizeMaxM) throws Exception {
+    public static String uploadFile(HttpServletRequest request, Path currPath, long sizeMaxM) throws Exception {
         //如果不是文件上传，则返回
         var isMultipart = ServletFileUpload.isMultipartContent(request);
         if (!isMultipart) {
@@ -60,8 +61,8 @@ public class FileUpload {
             var picPath = "iknowData" + fileTypeName;
 
             // 返回文件名，以时间为名，路径：e:/temp
-            var savePath = currPath + "/" + fileName;
-            var file = new File(savePath);
+            var savePath = Path.of(currPath.toString(), fileName);
+            var file = savePath.toFile();
             //返回相对路径
             relativeWebRootPath = "pic/" + picPath;
 //            if (!file.getParentFile().isDirectory()) {

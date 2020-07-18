@@ -39,7 +39,7 @@ public class TestFileUtil {
         System.out.println(Path.of("/../a.txt").toAbsolutePath());
         System.out.println(Path.of("/../a.txt").normalize());
         System.out.println(new File("/../a.txt").getAbsolutePath());
-        System.out.println(Path.of("D:\\flyNetDik\\admin/../admin\\backData").toRealPath());
+//        System.out.println(Path.of("D:\\flyNetDik\\admin/../admin\\backData").toRealPath());
 //
 //        System.out.println(Path.of("/../a.txt").toRealPath());
     }
