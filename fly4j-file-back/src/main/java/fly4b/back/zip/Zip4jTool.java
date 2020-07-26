@@ -23,16 +23,16 @@ import java.nio.file.Path;
 public class Zip4jTool {
 
 
-    public static void zipFile(File destZipFile, File srcfile, String pwd) throws Exception {
+    public static void zipFile(File destZipFile, File srcFile, String pwd) throws Exception {
         if (StringUtils.isBlank(pwd)) {
             throw new RuntimeException("password is empty");
         }
-        if (srcfile.isDirectory()) {
+        if (srcFile.isDirectory()) {
             throw new RuntimeException("is not Directory");
         }
         FileUtils.forceMkdirParent(destZipFile);
         new ZipFile(destZipFile, pwd.toCharArray())
-                .addFile(srcfile, getZipParameters());
+                .addFile(srcFile, getZipParameters());
 
     }
 
@@ -53,10 +53,12 @@ public class Zip4jTool {
 
     private static ZipParameters getZipParameters() {
         ZipParameters parameters = new ZipParameters();
+        //DEFLATE是同时使用了LZ77算法与哈夫曼编码（Huffman Coding）的一个无损数据压缩算法
         parameters.setCompressionMethod(CompressionMethod.DEFLATE);
         parameters.setCompressionLevel(CompressionLevel.NORMAL);
         //set password
         parameters.setEncryptFiles(true);
+        // byte temp_val = (byte) (val ^ zipCryptoEngine.decryptByte() & 0xff);异或加密
         parameters.setEncryptionMethod(EncryptionMethod.ZIP_STANDARD);
         return parameters;
     }
