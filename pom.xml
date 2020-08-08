@@ -194,9 +194,7 @@
         </plugins>
     </build>
     <modules>
-        <module>fly4j-file-back</module>
-        <module>fly4j-http</module>
         <module>fly4j-common</module>
-        <module>fly4j-frame</module>
+        <module>fly4j-http</module>
     </modules>
 </project>
