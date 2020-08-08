@@ -1,4 +1,4 @@
-package fly4b.back.zip;
+package fly4j.back.zip;
 
 import fly4j.common.file.FileUtil;
 import net.lingala.zip4j.ZipFile;

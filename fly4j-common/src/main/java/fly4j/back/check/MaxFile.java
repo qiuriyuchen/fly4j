@@ -1,4 +1,4 @@
-package fly4b.back.check;
+package fly4j.back.check;
 
 import fly4j.common.StringConst;
 import fly4j.common.file.FileUtil;

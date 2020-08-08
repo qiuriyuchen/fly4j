@@ -1,12 +1,12 @@
 package fly4b.back.zip;
 
 
-import fly4b.back.DirCompare;
-import fly4b.back.DirCompareImpl;
-import fly4b.back.DirZip;
-import fly4b.back.ZipConfig;
+import fly4j.back.DirCompare;
+import fly4j.back.DirCompareImpl;
+import fly4j.back.DirZip;
+import fly4j.back.ZipConfig;
+import fly4j.back.zip.Zip4jTool;
 import fly4j.common.FlyResult;
-import fly4j.common.file.FileUtil;
 import fly4j.common.pesistence.file.FileStrStore;
 import fly4j.common.test.TestData;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,6 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author qryc

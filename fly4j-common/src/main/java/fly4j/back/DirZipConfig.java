@@ -1,7 +1,6 @@
-package fly4b.back;
+package fly4j.back;
 
 import java.util.List;
-import java.util.Set;
 
 public interface DirZipConfig {
     List<ZipConfig> getZipConfigList();

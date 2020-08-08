@@ -10,6 +10,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>fly4j-common</artifactId>
+    <properties>
+        <spring.version>5.0.2.RELEASE</spring.version>
+    </properties>
     <dependencies>
         <!--json-->
         <dependency>
@@ -27,8 +30,19 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.11.0</version>
         </dependency>
+        <!--        back           -->
+        <dependency>
+            <groupId>net.lingala.zip4j</groupId>
+            <artifactId>zip4j</artifactId>
+            <version>2.6.1</version>
+        </dependency>
 
-
+        <!--        frame           -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
     </dependencies>
 
