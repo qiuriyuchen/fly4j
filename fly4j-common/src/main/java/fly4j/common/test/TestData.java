@@ -18,7 +18,7 @@ public class TestData {
         if (OsUtil.isWindows()) {
             testPath = Path.of("D:/flyTestData");
         } else {
-            testPath = Path.of("/export/flyTestData");
+            testPath = Path.of("~/flyTestData");
         }
     }
 
