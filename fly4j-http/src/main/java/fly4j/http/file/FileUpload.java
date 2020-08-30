@@ -10,8 +10,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 /**
- * 文件操作 Created by IntelliJ IDEA. UserInfo: guanpanpan Date: 14-2-4 Time: 上午12:43 To
- * change this template use File | Settings | File Templates.
+ * 文件操作  qryc  14-2-4 Time: 上午12:43 To
+ *
  */
 public class FileUpload {
 
